@@ -154,6 +154,30 @@ details.note summary::-webkit-details-marker{color:var(--muted)}
 .pre{font-family:var(--f-mono);font-size:72px;font-weight:600;color:var(--accent);line-height:1}
 .fbpref{display:grid;gap:8px;margin-top:10px}
 .fbpref div{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;font-size:14px;padding:8px 0;border-bottom:1px solid var(--line)}
+.wt{color:var(--accent);font-weight:700}
+.keycard{border:1.5px solid color-mix(in srgb,var(--accent) 45%,transparent);background:linear-gradient(180deg,var(--accent-soft),transparent 140%);border-radius:14px;padding:14px 16px}
+.kc-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.kc-h b{font-size:15.5px;color:var(--accent)}
+.kc-h .muted{font-size:12px;margin-left:auto}
+.kc-list{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px}
+.kc-list li{display:flex;gap:10px;align-items:center;font-weight:700;font-size:15px}
+.kc-list li svg{flex:none}
+.pulse{display:inline-block;vertical-align:middle;flex:none}
+strong.kp{font-weight:700;color:var(--ink);background:linear-gradient(transparent 58%,color-mix(in srgb,var(--accent) 28%,transparent) 58%);padding:0 1px}
+.acc{border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.acc summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;align-items:center;padding:12px 14px}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary::after{content:"";width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);grid-row:1;grid-column:3;transition:transform .2s}
+.acc[open] summary::after{transform:rotate(-135deg)}
+.acc summary .t{font-weight:700;font-size:15px}
+.acc summary .t .num{font-family:var(--f-mono);font-size:12px;color:var(--accent);margin-right:4px}
+.acc summary .sub{grid-column:2/4;font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.acc[open] summary .sub{white-space:normal}
+.acc-b{display:grid;gap:8px;padding:0 14px 14px}
+.cue .q{color:var(--accent);font-size:18px;line-height:0;margin:0 2px}
+.mist .fix{display:inline-block;font-size:11.5px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:0 6px;margin-right:4px}
+.note.safety{display:flex;gap:8px;align-items:flex-start;background:color-mix(in srgb,var(--m2) 12%,transparent);color:var(--ink)}
+.gsec h3 .chip{font-weight:600}
 /* session */
 .session{display:grid;grid-template-columns:1.1fr 1fr;gap:20px;align-items:start}
 @media (max-width:860px){.session{grid-template-columns:1fr}}
@@ -211,7 +235,7 @@ details.note summary::-webkit-details-marker{color:var(--muted)}
 .diag-layout{display:grid;grid-template-columns:1.2fr 1fr;gap:20px;align-items:start}
 @media (max-width:900px){.diag-layout{grid-template-columns:1fr}}
 .sticky{position:sticky;top:calc(var(--hdr,64px) + 16px)}
-@media (min-width:1101px){.gsticky{position:sticky;top:calc(var(--hdr,64px) + 16px)}.mmap-inline{display:none}}
+@media (min-width:1101px){.gsticky{position:sticky;top:calc(var(--hdr,64px) + 16px)}.mmap.mmap-inline{display:none}}
 @media (max-width:1100px){
   .gsticky{position:sticky;top:var(--hdr,64px);z-index:6;background:var(--bg);padding-block:8px 6px;margin-top:-8px}
   .gsticky .mmap{display:none}
@@ -414,6 +438,7 @@ details.note summary::-webkit-details-marker{color:var(--muted)}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
+var GSEX=null;
 /* ================= LOGO ================= */
 function logoSVG(size,opts={}){
   const id='lg'+Math.random().toString(36).slice(2,7);
@@ -439,6 +464,8 @@ const REFS = {
   vispute11:{t:'Vispute SS 외 (2011). The effect of abdominal exercise on abdominal fat. J Strength Cond Res 25(9):2559–2564.',u:'https://pubmed.ncbi.nlm.nih.gov/21804427/',use:'복부 운동만으로는 뱃살이 줄지 않음 → 특정 부위 목표도 전신 운동이 기본'},
   zourdos16:{t:'Zourdos MC 외 (2016). Novel resistance training–specific RPE scale measuring repetitions in reserve. J Strength Cond Res 30(1):267–275.',u:'https://pubmed.ncbi.nlm.nih.gov/26049792/',use:'운동 후 난이도 피드백(RIR 기반 RPE)으로 다음 강도 조절'},
   compendium24:{t:'Herrmann SD 외 (2024). 2024 Adult Compendium of Physical Activities: A third update of the energy costs of human activities. J Sport Health Sci 13(1):6–12.',u:'https://pubmed.ncbi.nlm.nih.gov/38242596/',use:'운동별 MET 값으로 예상 소모 칼로리 계산'},
+  roberts20:{t:'Roberts BM 외 (2020). Sex differences in resistance training: A systematic review and meta-analysis. J Strength Cond Res 34(5):1448–1460.',u:'https://pubmed.ncbi.nlm.nih.gov/32218059/',use:'남녀 모두 근력운동에 비슷한 비율로 적응 → 같은 운동, 시작 중량만 차등'},
+  hunter14:{t:'Hunter SK (2014). Sex differences in human fatigability: mechanisms and insight to physiological responses. Acta Physiol 210(4):768–789.',u:'https://onlinelibrary.wiley.com/doi/abs/10.1111/apha.12234',use:'여성의 높은 피로 저항성 → 하체 반복 +2회, 휴식 10초 단축'},
   lally10:{t:'Lally P 외 (2010). How are habits formed: Modelling habit formation in the real world. Eur J Soc Psychol 40(6):998–1009.',u:'https://doi.org/10.1002/ejsp.674',use:'습관 자동화까지 평균 66일(18–254일) → 매일 알림·퍼즐 진행도 설계 근거'}
 };
 
@@ -446,7 +473,7 @@ const MUS = {chest:'가슴',delts:'어깨',arms:'이두',triceps:'삼두',abs:'�
 
 /* pose: hip [x,y], t torso angle from vertical (+ = facing side), fN/fF ankle targets, hN/hF wrist targets */
 const EX = [
-{id:'squat',name:'스쿼트',en:'Bodyweight · Goblet Squat',cat:'하체',prim:['quads','glutes'],sec:['hams','abs','lowback'],seg:{thigh:'p',glute:'p',shin:'s',torso:'s'},kind:'reps',repAdj:0,
+{id:'squat',key:["무릎은 두 번째 발가락 방향", "엉덩이를 뒤로, 의자에 앉듯이", "허벅지 평행까지 · 허리는 중립"],hl:["두 번째 발가락 방향", "의자에 앉는다고", "허리가 말리지 않는 범위", "발바닥 전체로"],name:'스쿼트',en:'Bodyweight · Goblet Squat',cat:'하체',prim:['quads','glutes'],sec:['hams','abs','lowback'],seg:{thigh:'p',glute:'p',shin:'s',torso:'s'},kind:'reps',repAdj:0,
  tm:[1500,350,1000,550],ph:['내려가기','멈춤','올라오기','준비'],br:['in','hold','out','free'],
  A:{hip:[150,111],t:0,fN:[153,196],fF:[147,196],hN:[153,112],hF:[147,112]},
  B:{hip:[128,160],t:42,fN:[153,196],fF:[147,196],hN:[222,118],hF:[218,116]},
@@ -459,7 +486,7 @@ const EX = [
  ev:'하체에서 가장 큰 근육(앞벅지·엉덩이)을 한 번에 쓰는 복합 관절 운동이에요. ACSM은 감량과 근력 향상 모두에서 큰 근육군을 쓰는 복합 운동을 기본으로 권해요.',refs:['ratamess','acsm09'],
  safety:'무릎이 아프면 박스 스쿼트로 깊이를 제한하고, 통증이 계속되면 전문가 상담을 받으세요.'},
 
-{id:'lunge',name:'리버스 런지',en:'Reverse Lunge',cat:'하체',prim:['glutes','quads'],sec:['hams','calves','obliques'],seg:{thigh:'p',glute:'p',shin:'s'},kind:'reps',repAdj:-2,perSide:true,
+{id:'lunge',key:["엘리베이터처럼 수직으로 내려가기", "앞발 뒤꿈치로 밀고 올라오기", "골반은 정면 · 수평 유지"],hl:["엘리베이터처럼 곧게", "주먹 하나 높이", "앞발 뒤꿈치로"],name:'리버스 런지',en:'Reverse Lunge',cat:'하체',prim:['glutes','quads'],sec:['hams','calves','obliques'],seg:{thigh:'p',glute:'p',shin:'s'},kind:'reps',repAdj:-2,perSide:true,
  tm:[1300,350,1000,550],ph:['뒤로 딛기','멈춤','밀고 돌아오기','준비'],br:['in','hold','out','free'],
  A:{hip:[160,111],t:0,fN:[163,196],fF:[157,196],hN:[163,112],hF:[157,112]},
  B:{hip:[140,150],t:4,fN:[170,196],fF:[82,188],toeF:45,hN:[146,150],hF:[140,150]},
@@ -472,7 +499,7 @@ const EX = [
  ev:'한 다리로 버티는 운동은 둔근을 강하게 쓰고 좌우 불균형을 잡아줘요. 뒤로 딛는 방식은 앞으로 딛는 런지보다 멈추는 충격이 적고 균형 잡기 쉬워 초보자에게 먼저 권해요.',refs:['distefano09','ratamess'],
  safety:'무릎 통증이 있으면 글루트 브릿지로 대체돼요.'},
 
-{id:'bridge',name:'글루트 브릿지',en:'Glute Bridge · Hip Thrust',cat:'하체',prim:['glutes'],sec:['hams','abs'],seg:{glute:'p',thigh:'s'},kind:'reps',repAdj:2,floor:true,
+{id:'bridge',key:["뒤꿈치로 바닥을 밀어 올리기", "어깨–골반–무릎 일직선에서 멈춤", "꼭대기에서 2초 꽉 조이기"],hl:["뒤꿈치로 바닥을 밀어", "일직선이 되는 지점", "2초간 꽉 조여요"],name:'글루트 브릿지',en:'Glute Bridge · Hip Thrust',cat:'하체',prim:['glutes'],sec:['hams','abs'],seg:{glute:'p',thigh:'s'},kind:'reps',repAdj:2,floor:true,
  tm:[900,1100,1300,500],ph:['밀어 올리기','조이기','내려오기','준비'],br:['out','hold','in','free'],
  A:{hip:[160,189],t:-90,h:-90,fN:[206,197],fF:[202,197],hN:[158,196],hF:[154,196],eN:-1,eF:-1},
  B:{hip:[157,170],t:-110,h:-90,fN:[206,197],fF:[202,197],hN:[158,196],hF:[154,196],eN:-1,eF:-1},
@@ -485,7 +512,7 @@ const EX = [
  ev:'힙 쓰러스트(브릿지를 등받이에 기대 가동범위를 넓힌 버전)는 백스쿼트보다 대둔근 근활성도가 높게 측정됐어요. 무릎 부담이 적어 무릎이 불편한 사람의 하체 대체 운동으로도 좋아요.',refs:['contreras15'],
  safety:'허리 통증이 있으면 높이를 낮추고 꼭대기 정지 시간을 줄이세요.'},
 
-{id:'rdl',name:'루마니안 데드리프트',en:'Dumbbell Romanian Deadlift',cat:'하체',prim:['hams','glutes'],sec:['lowback','lats','traps'],seg:{thigh:'p',glute:'p',torso:'s'},kind:'reps',repAdj:-2,equip:'덤벨·물병',
+{id:'rdl',key:["무릎 각도 고정, 엉덩이만 뒤로", "덤벨은 다리에 붙여서", "등은 판자처럼 평평하게"],hl:["엉덩이를 뒤로 쭉 빼며", "몸 가까이로", "뒷벅지가 팽팽하게 당기는 지점"],name:'루마니안 데드리프트',en:'Dumbbell Romanian Deadlift',cat:'하체',prim:['hams','glutes'],sec:['lowback','lats','traps'],seg:{thigh:'p',glute:'p',torso:'s'},kind:'reps',repAdj:-2,equip:'덤벨·물병',
  tm:[1600,300,1000,500],ph:['엉덩이 뒤로','멈춤','골반 밀기','준비'],br:['in','hold','out','free'],
  A:{hip:[150,111],t:0,fN:[153,196],fF:[147,196],hN:[154,112],hF:[148,112],db:1},
  B:{hip:[128,120],t:70,fN:[153,196],fF:[147,196],hN:[178,156],hF:[174,156],db:1},
@@ -498,7 +525,7 @@ const EX = [
  ev:'엉덩이를 접었다 펴는 힙 힌지 패턴은 뒷벅지·둔근·척추기립근을 함께 강화해요. 한 다리 버전은 둔근 활성이 특히 높게 나타났어요.',refs:['distefano09','ratamess'],
  safety:'허리 통증이 있으면 글루트 브릿지로 대체돼요.'},
 
-{id:'pushup',name:'푸시업',en:'Push-up',cat:'상체',prim:['chest','triceps'],sec:['delts','abs'],seg:{chest:'p',ua:'p',delt:'s',torso:'s'},kind:'reps',repAdj:-4,floor:true,
+{id:'pushup',key:["머리부터 발뒤꿈치까지 일직선", "팔꿈치는 몸통에서 45°", "가슴이 주먹 하나 높이까지"],hl:["약 45° 방향", "주먹 하나 높이", "발 쪽으로 밀어낸다"],name:'푸시업',en:'Push-up',cat:'상체',prim:['chest','triceps'],sec:['delts','abs'],seg:{chest:'p',ua:'p',delt:'s',torso:'s'},kind:'reps',repAdj:-4,floor:true,
  tm:[1300,250,900,500],ph:['내려가기','멈춤','밀어 올리기','준비'],br:['in','hold','out','free'],
  A:{hip:[150,162],t:69,fN:[70,193],fF:[70,193],toeN:20,toeF:20,hN:[205,199],hF:[201,199],eN:1,eF:1},
  B:{hip:[156,185],t:84,fN:[70,193],fF:[70,193],toeN:20,toeF:20,hN:[205,199],hF:[201,199],eN:1,eF:1},
@@ -511,7 +538,7 @@ const EX = [
  ev:'근활성도를 맞췄을 때 푸시업은 벤치프레스와 비슷한 근력 향상을 보였어요. 장비 없이 가슴·삼두·어깨를 함께 강화할 수 있어요.',refs:['calatayud15','ratamess'],
  safety:'손목이 아프면 주먹을 쥐거나 푸시업 바를 사용하세요.'},
 
-{id:'row',name:'덤벨 벤트오버 로우',en:'Dumbbell Bent-over Row',cat:'상체',prim:['lats'],sec:['traps','delts','arms'],seg:{back:'p',ua:'s',fa:'s',delt:'s'},kind:'reps',repAdj:0,equip:'덤벨·물병·밴드',
+{id:'row',key:["날개뼈를 먼저 모으기", "팔꿈치를 뒷주머니 쪽으로", "내릴 땐 2초 천천히"],hl:["날개뼈를 뒤로 모아요", "뒷주머니 방향", "천천히 팔을 펴며"],name:'덤벨 벤트오버 로우',en:'Dumbbell Bent-over Row',cat:'상체',prim:['lats'],sec:['traps','delts','arms'],seg:{back:'p',ua:'s',fa:'s',delt:'s'},kind:'reps',repAdj:0,equip:'덤벨·물병·밴드',
  tm:[800,600,1300,400],ph:['당기기','조이기','내리기','준비'],br:['out','hold','in','free'],
  A:{hip:[128,118],t:65,fN:[153,196],fF:[147,196],hN:[182,150],hF:[178,150],db:1},
  B:{hip:[128,118],t:65,fN:[153,196],fF:[147,196],hN:[160,108],hF:[156,108],db:1},
@@ -524,7 +551,7 @@ const EX = [
  ev:'미는 운동(푸시업)과 당기는 운동을 균형 있게 하면 주요 근육군을 고르게 발달시키고 굽은 자세를 예방해요. ACSM은 모든 주요 근육군을 다루도록 권해요.',refs:['ratamess'],
  safety:'허리가 불편하면 한 손으로 의자를 짚는 원암 로우로 하세요.'},
 
-{id:'press',name:'덤벨 숄더 프레스',en:'Standing Dumbbell Shoulder Press',cat:'상체',prim:['delts'],sec:['triceps','traps','abs'],seg:{delt:'p',ua:'p',fa:'s',torso:'s'},kind:'reps',repAdj:-2,equip:'덤벨·물병',
+{id:'press',key:["갈비뼈 닫고 허리 고정", "손목–팔꿈치 수직선 유지", "내릴 땐 2초 천천히"],hl:["갈비뼈를 닫고", "곧게 밀어 올려요", "2초에 걸쳐"],name:'덤벨 숄더 프레스',en:'Standing Dumbbell Shoulder Press',cat:'상체',prim:['delts'],sec:['triceps','traps','abs'],seg:{delt:'p',ua:'p',fa:'s',torso:'s'},kind:'reps',repAdj:-2,equip:'덤벨·물병',
  tm:[900,300,1400,450],ph:['밀어 올리기','멈춤','내리기','준비'],br:['out','hold','in','free'],
  A:{hip:[150,111],t:0,fN:[153,196],fF:[147,196],hN:[160,40],hF:[156,40],db:1},
  B:{hip:[150,111],t:0,fN:[153,196],fF:[147,196],hN:[153,-3],hF:[149,-3],db:1},
@@ -537,7 +564,7 @@ const EX = [
  ev:'어깨 전체와 삼두를 쓰는 대표적인 수직 밀기 운동이에요. 서서 하면 몸통 안정 근육까지 함께 써요.',refs:['ratamess'],
  safety:'팔을 머리 위로 올릴 때 어깨가 아프면 중단하고 가동범위를 줄이세요.'},
 
-{id:'curlup',name:'맥길 컬업',en:'McGill Curl-up',cat:'코어',prim:['abs'],sec:['obliques'],seg:{core:'p'},kind:'hold',floor:true,
+{id:'curlup',key:["종이 한 장 높이만 들기", "목과 머리는 한 덩어리", "10초 × 여러 번, 숨 참지 않기"],hl:["종이 한 장 높이만큼만", "한 덩어리처럼", "짧게 숨을 쉬어요"],name:'맥길 컬업',en:'McGill Curl-up',cat:'코어',prim:['abs'],sec:['obliques'],seg:{core:'p'},kind:'hold',floor:true,
  tm:[700,1800,700,700],ph:['살짝 들기','10초 버티기','내려놓기','호흡'],br:['out','short','in','free'],
  A:{hip:[160,189],t:-90,h:-90,fN:[246,196],fF:[205,197],toeN:180,hN:[140,194],hF:[136,194],eN:-1,eF:-1},
  B:{hip:[160,189],t:-82,h:-78,fN:[246,196],fF:[205,197],toeN:180,hN:[140,194],hF:[136,194],eN:-1,eF:-1},
@@ -550,7 +577,7 @@ const EX = [
  ev:'척추를 반복해서 크게 굽히는 크런치 대신, 허리 부담을 줄이면서 복직근을 쓰도록 설계된 운동이에요. 버드독·플랭크 계열과 함께 허리 건강을 위한 코어 운동으로 권장돼요.',refs:['mcgill10'],
  safety:'허리 통증이 있는 사람에게도 비교적 안전하지만 통증이 늘면 중단하세요.'},
 
-{id:'birddog',name:'버드독',en:'Bird Dog',cat:'코어',prim:['lowback','glutes'],sec:['abs','delts'],seg:{lowback:'p',glute:'p',delt:'s',thigh:'s'},kind:'reps',repAdj:-4,perSide:true,floor:true,
+{id:'birddog',key:["등 위 물컵을 쏟지 않게", "다리는 높이보다 멀리", "6~8초 버티며 엉덩이 조이기"],hl:["동시에 뻗어요", "멀리 뻗어요", "6~8초 버티며"],name:'버드독',en:'Bird Dog',cat:'코어',prim:['lowback','glutes'],sec:['abs','delts'],seg:{lowback:'p',glute:'p',delt:'s',thigh:'s'},kind:'reps',repAdj:-4,perSide:true,floor:true,
  tm:[1100,1300,1100,500],ph:['뻗기','8초 버티기','돌아오기','준비'],br:['out','short','in','free'],
  A:{hip:[110,152],t:80,h:80,fN:[68,196],fF:[64,196],toeN:-100,toeF:-100,hN:[168,198],hF:[164,198]},
  B:{hip:[110,152],t:80,h:80,fN:[26,146],fF:[64,196],toeN:0,toeF:-100,hN:[168,198],hF:[226,136]},
@@ -563,7 +590,7 @@ const EX = [
  ev:'척추를 중립으로 유지한 채 허리·엉덩이 근육을 쓰는 운동이에요. 허리 부담이 적어 코어 강화 기본 운동으로 권장돼요.',refs:['mcgill10'],
  safety:'손목이 불편하면 주먹을 쥐고 짚어도 돼요.'},
 
-{id:'plank',name:'플랭크',en:'Forearm Plank',cat:'코어',prim:['abs'],sec:['obliques','delts','glutes'],seg:{core:'p',delt:'s',glute:'s',thigh:'s'},kind:'hold',floor:true,
+{id:'plank',key:["팔꿈치는 어깨 바로 아래", "엉덩이 조이고 머리–발 일직선", "무너지기 전에 멈추기"],hl:["팔꿈치로 바닥을 밀어", "엉덩이를 조이고", "무너지기 전에 멈추고"],name:'플랭크',en:'Forearm Plank',cat:'코어',prim:['abs'],sec:['obliques','delts','glutes'],seg:{core:'p',delt:'s',glute:'s',thigh:'s'},kind:'hold',floor:true,
  tm:[2000,300,2000,300],ph:['버티며 내쉬기','버티기','버티며 들이쉬기','버티기'],br:['out','out','in','in'],
  A:{hip:[144,177],t:79,fN:[60,194],fF:[60,194],toeN:20,toeF:20,hN:[229,197],hF:[225,197],eN:1,eF:1},
  B:{hip:[144,175.5],t:79.5,fN:[60,194],fF:[60,194],toeN:20,toeF:20,hN:[229,197],hF:[225,197],eN:1,eF:1},
@@ -576,7 +603,7 @@ const EX = [
  ev:'몸통이 꺾이지 않게 버티는 능력(항신전)을 키우는 운동이에요. 길게 한 번 버티기보다 10초 안팎으로 여러 번 반복하는 방식이 권장돼요.',refs:['mcgill10'],
  safety:'허리가 아프면 즉시 무릎을 대세요.'},
 
-{id:'highknee',name:'하이 니 인터벌',en:'High Knees Interval',cat:'유산소',prim:['quads','abs'],sec:['calves','glutes'],seg:{thigh:'p',core:'s',shin:'s'},kind:'interval',
+{id:'highknee',key:["무릎은 골반 높이까지", "앞꿈치로 조용히 착지", "운동 구간은 말하기 힘든 강도"],hl:["골반 높이까지", "앞꿈치로 가볍게", "최대한 빠르게"],name:'하이 니 인터벌',en:'High Knees Interval',cat:'유산소',prim:['quads','abs'],sec:['calves','glutes'],seg:{thigh:'p',core:'s',shin:'s'},kind:'interval',
  tm:[240,40,240,40],ph:['무릎 올리기','','무릎 올리기',''],brCycle:1600,
  A:{hip:[150,108],t:0,fN:[192,150],fF:[148,196],hN:[136,96],hF:[178,66]},
  B:{hip:[150,108],t:0,fN:[152,196],fF:[188,150],hN:[178,66],hF:[136,96]},
@@ -589,7 +616,7 @@ const EX = [
  ev:'과체중·비만 성인에서 인터벌 유산소는 지속 유산소와 체지방 감소 효과가 비슷하면서 시간이 약 40% 적게 들었어요. 바쁜 일정에서 꾸준히 하기 좋은 방식이에요.',refs:['wewege17','who20'],
  safety:'BMI 30 이상이거나 무릎이 불편하면 점프 없는 제자리 행진으로 바뀌어요.'},
 
-{id:'climber',name:'마운틴 클라이머',en:'Mountain Climber',cat:'유산소',prim:['abs','delts'],sec:['quads','chest'],seg:{core:'p',delt:'s',thigh:'s'},kind:'interval',floor:true,
+{id:'climber',key:["어깨는 손목 위에 고정", "엉덩이 높이 유지", "속도보다 리듬"],hl:["가슴 쪽으로 끌어당겨요", "손목 위에서 움직이지 않게", "출렁이지 않게"],name:'마운틴 클라이머',en:'Mountain Climber',cat:'유산소',prim:['abs','delts'],sec:['quads','chest'],seg:{core:'p',delt:'s',thigh:'s'},kind:'interval',floor:true,
  tm:[330,60,330,60],ph:['무릎 당기기','','무릎 당기기',''],brCycle:1600,
  A:{hip:[150,162],t:69,fN:[148,188],fF:[70,193],toeN:20,toeF:20,hN:[205,199],hF:[201,199]},
  B:{hip:[150,162],t:69,fN:[70,193],fF:[146,188],toeN:20,toeF:20,hN:[205,199],hF:[201,199]},
@@ -729,115 +756,165 @@ const MUS3D={
  traps:[['torso',53,-4.6,0,3,6,10]],glutes:[['torso',-1,-8,6,4.8,6.8,5.6],['torso',-1,-8,-6,4.8,6.8,5.6]]
 };
 function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim()||'#999';}
+/* ---- 성별 체형 ---- */
+const BODY={
+ f:{torso:[[-11,11.5,6.5,8],[-5,14.2,8,10.6],[2,14,7.8,9.6],[10,12,7,7.8],[17,10.6,6.7,6.9],[25,11.4,7.1,7.1],[34,13,8.3,7.7],[43,14,9.2,8.1],[51,14.6,8,8.1],[56,12.4,6.3,6.9],[59,7,4.5,4.8],[61,4.4,3.5,3.7]],
+    shZ:15,hipZ:7.4,leg:.93,arm:.86,neck:3.9,head:.95,bust:1,
+    cloth:{bottom:[-11,12],top:[27,58],sleeve:0,legSkinFrom:36,knee:'bottom',shoulder:'skin'},hair:'pony'},
+ m:{torso:[[-11,11,6.5,7.5],[-5,13,7.8,9.4],[2,13,7.8,9],[10,12.2,7.4,8],[18,12,7.6,7.6],[26,13.2,8.4,8],[35,15.6,9.6,8.8],[44,17,10.4,9],[51,17.8,9.2,8.8],[56,15,7,7.6],[59,8,5,5.2],[61,5.2,4.2,4.4]],
+    shZ:18,hipZ:6.8,leg:1,arm:1,neck:4.8,head:1,bust:0,
+    cloth:{bottom:[-11,8],top:[8,58],sleeve:13,legSkinFrom:0,thighShort:24,knee:'skin',shoulder:'top'},hair:'short'}
+};
+BODY.n={torso:BODY.f.torso.map((r,i)=>r.map((v,j)=>(v+BODY.m.torso[i][j])/2)),shZ:16.5,hipZ:7.1,leg:.965,arm:.93,neck:4.3,head:.97,bust:0,
+  cloth:{bottom:[-11,8],top:[8,58],sleeve:0,legSkinFrom:36,knee:'bottom',shoulder:'skin'},hair:'short'};
+const LIMB={
+ th:[[0,8.4],[5,8.8,9.3],[16,8.2,8.8],[28,6.8],[38,5.4],[44,5]],
+ sn:[[0,5],[5,5.4,5.4,6.4],[13,5.5,5.5,6.8],[24,4.4],[34,3.4],[42,3.1]],
+ ua:[[0,4.8],[7,4.6,5.2],[18,4],[30,3.3]],
+ fa:[[0,3.5],[6,3.7],[18,2.9],[28,2.3]]
+};
+function curSex(){return (typeof GSEX!=='undefined'&&GSEX)||(S&&S.prof&&S.prof.sex)||'n';}
 function Stage3D(thumb){
   const SC=1/60,V=(p,z)=>new THREE.Vector3((p[0]-150)*SC,(200-p[1])*SC,z*SC);
   const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:!!thumb});
   renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));
   renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.08;
   const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(30,4/3,.1,100);
-  scene.add(new THREE.HemisphereLight(0xffffff,0x7d8d86,.8));
-  const sun=new THREE.DirectionalLight(0xffffff,.8);sun.position.set(2.5,6,4);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);
-  Object.assign(sun.shadow.camera,{left:-4,right:4,top:4,bottom:-4});sun.shadow.radius=4;scene.add(sun);
-  const rim=new THREE.DirectionalLight(0xffffff,.35);rim.position.set(-4,3,-3);scene.add(rim);
-  const floor=new THREE.Mesh(new THREE.CircleGeometry(5,48),new THREE.ShadowMaterial({opacity:.2}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
+  scene.add(new THREE.HemisphereLight(0xfff6ee,0x6f7f78,.75));
+  const sun=new THREE.DirectionalLight(0xffffff,1.05);sun.position.set(2.5,6,4);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);
+  Object.assign(sun.shadow.camera,{left:-4,right:4,top:4,bottom:-4});sun.shadow.radius=4;sun.shadow.bias=-.0006;scene.add(sun);
+  const rim=new THREE.DirectionalLight(0xdff4ff,.55);rim.position.set(-4,3.5,-3);scene.add(rim);
+  const fillL=new THREE.DirectionalLight(0xffffff,.25);fillL.position.set(0,1,6);scene.add(fillL);
+  const floor=new THREE.Mesh(new THREE.CircleGeometry(5,48),new THREE.ShadowMaterial({opacity:.22}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
   const disc=new THREE.Mesh(new THREE.CircleGeometry(2.3,64),new THREE.MeshBasicMaterial({color:0x888888,transparent:true,opacity:.14}));disc.rotation.x=-Math.PI/2;disc.position.y=.002;scene.add(disc);
-  let fig=null,ex=null,view={az:38,el:12},target=new THREE.Vector3(),dist=6,parts={},muscles=[],chestMeshes=[],brace=null,mat={},particles=[],spawnAcc=0,lastT=0;
-  const geo={sph:new THREE.SphereGeometry(1,24,16),cyl:(r0,r1)=>{const g=new THREE.CylinderGeometry(r1*SC,r0*SC,1,18);g.translate(0,.5,0);return g;}};
+  let fig=null,ex=null,view={az:38,el:12},target=new THREE.Vector3(),dist=6,parts={},chestMeshes=[],brace=null,mat={},particles=[],spawnAcc=0,lastT=0,B=BODY.n,sex='n';
+  const sph=new THREE.SphereGeometry(1,28,20);
+  const lin=c=>new THREE.Color(c).convertSRGBToLinear();
+  const std=(c,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:lin(c),roughness:.62,metalness:0},o));
+  const smooth=t=>t*t*(3-2*t);
+  function levelAt(lv,y){if(y<=lv[0][0])return lv[0];for(let i=1;i<lv.length;i++){if(y<=lv[i][0]){const a=lv[i-1],b=lv[i],t=smooth((y-a[0])/(b[0]-a[0]));return [y,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t,a[3]+(b[3]-a[3])*t];}}return lv[lv.length-1];}
+  // levels: [y, w(half width z), f(front depth), b(back depth)]
+  function loft(lv,y0,y1,seg=24,capB=true,capT=true){
+    const ys=[];const n=Math.max(2,Math.ceil((y1-y0)/1.6));for(let i=0;i<=n;i++)ys.push(y0+(y1-y0)*i/n);
+    const pos=[],idx=[];
+    ys.forEach(y=>{const L=levelAt(lv,y);for(let a=0;a<=seg;a++){const t=a/seg*Math.PI*2,c=Math.cos(t),s=Math.sin(t);pos.push((c>=0?c*L[2]:c*L[3])*SC,y*SC,s*L[1]*SC);}});
+    const R=seg+1;for(let i=0;i<ys.length-1;i++)for(let a=0;a<seg;a++){const p=i*R+a,q=p+R;idx.push(p,q,p+1,p+1,q,q+1);}
+    if(capB){const c=pos.length/3;pos.push(0,ys[0]*SC,0);for(let a=0;a<seg;a++)idx.push(c,a+1,a);}
+    if(capT){const c=pos.length/3,o=(ys.length-1)*R;pos.push(0,ys[ys.length-1]*SC,0);for(let a=0;a<seg;a++)idx.push(c,o+a,o+a+1);}
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setIndex(idx);g.computeVertexNormals();return g;
+  }
+  const limbLv=(k,s)=>LIMB[k].map(r=>[r[0],r[1]*s,(r[2]||r[1])*s,(r[3]||r[1])*s]);
   function frame(){const g=new THREE.Group();g.matrixAutoUpdate=false;fig.add(g);return g;}
-  function ell(parent,m,[y,x,z,rx,ry,rz],cast=true){const e=new THREE.Mesh(geo.sph,m);e.position.set(x*SC,y*SC,z*SC);e.scale.set(rx*SC,ry*SC,rz*SC);e.castShadow=cast;parent.add(e);return e;}
-  function build(e){
-    ex=e;if(fig){scene.remove(fig);fig.traverse(o=>{if(o.geometry&&o.geometry!==geo.sph)o.geometry.dispose();});}
-    fig=new THREE.Group();scene.add(fig);parts={};muscles=[];chestMeshes=[];particles=[];
-    const std=(c,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:new THREE.Color(c),roughness:.6,metalness:.04},o));
-    mat={body:std(css('--body3d')),joint:std(css('--joint3d')),
-      p:std(css('--m1'),{emissive:new THREE.Color(css('--m1')),emissiveIntensity:.35,roughness:.45}),
-      s:std(css('--m2'),{emissive:new THREE.Color(css('--m2')),emissiveIntensity:.25,roughness:.45}),
+  function mesh(g,m,parent,cast=true){const o=new THREE.Mesh(g,m);o.castShadow=cast;o.receiveShadow=true;parent.add(o);return o;}
+  function ell(parent,m,[y,x,z,rx,ry,rz],cast=true){const e=new THREE.Mesh(sph,m);e.position.set(x*SC,y*SC,z*SC);e.scale.set(rx*SC,ry*SC,rz*SC);e.castShadow=cast;e.receiveShadow=true;parent.add(e);return e;}
+  function build(e,sx){
+    ex=e;sex=sx||curSex();B=BODY[sex]||BODY.n;
+    if(fig){scene.remove(fig);fig.traverse(o=>{if(o.geometry&&o.geometry!==sph)o.geometry.dispose();});}
+    fig=new THREE.Group();scene.add(fig);parts={};chestMeshes=[];particles=[];
+    mat={skin:std('#E6B596',{roughness:.55}),top:std(sex==='f'?'#2FA37F':'#1F6F5C',{roughness:.78}),bottom:std('#27312E',{roughness:.85}),
+      shoe:std('#F4F6F5',{roughness:.5}),sole:std('#2A3431',{roughness:.7}),hair:std(sex==='f'?'#3A2A22':'#2A221E',{roughness:.9}),eye:std('#2A2320',{roughness:.3}),
+      p:std(css('--m1'),{emissive:lin(css('--m1')),emissiveIntensity:.4,roughness:.45,transparent:true,opacity:.93}),
+      s:std(css('--m2'),{emissive:lin(css('--m2')),emissiveIntensity:.3,roughness:.45,transparent:true,opacity:.93}),
       db:std('#3a4642',{roughness:.4,metalness:.5})};
     disc.material.color=new THREE.Color(css('--floor'));disc.visible=!e.floor;
-    // bones
-    const bone=(name,r0,r1)=>{const f=frame();const m=new THREE.Mesh(geo.cyl(r0,r1),mat.body);m.castShadow=true;f.add(m);parts[name]={f,m};};
-    ['N','F'].forEach(s=>{bone('th'+s,7.6,5.2);bone('sn'+s,5.4,3.8);bone('ua'+s,4.9,3.9);bone('fa'+s,3.9,3.1);});
+    const C=B.cloth;
+    // ---- torso (loft pieces with clothing split)
     const tf=frame();parts.torso={f:tf};
-    ell(tf,mat.body,[2,0,0,9.5,9.5,14.5]);
-    chestMeshes=[ell(tf,mat.body,[22,0,0,8.5,14,13]),ell(tf,mat.body,[42,0,0,10,16,16.5])];
-    const neck=new THREE.Mesh(geo.cyl(4.2,3.8),mat.body);neck.position.y=56*SC;neck.scale.y=9*SC;tf.add(neck);
-    parts.head=new THREE.Mesh(geo.sph,mat.body);parts.head.scale.set(9.6*SC,11*SC,9.2*SC);parts.head.castShadow=true;fig.add(parts.head);
-    parts.nose=new THREE.Mesh(geo.sph,mat.joint);parts.nose.scale.setScalar(2.2*SC);fig.add(parts.nose);
-    // joints
-    ['hipN','hipF','kneeN','kneeF','ankleN','ankleF','shN','shF','elN','elF'].forEach(j=>{const r=/hip/.test(j)?7.2:/sh/.test(j)?6:/knee/.test(j)?5.6:/el/.test(j)?4.3:4.2;const m=new THREE.Mesh(geo.sph,mat.joint);m.scale.setScalar(r*SC);m.castShadow=true;fig.add(m);parts[j]=m;});
-    ['N','F'].forEach(s=>{const h=new THREE.Mesh(geo.sph,mat.body);h.scale.set(3.4*SC,4.2*SC,3.2*SC);h.castShadow=true;fig.add(h);parts['hand'+s]=h;
-      const ft=new THREE.Mesh(geo.sph,mat.body);ft.castShadow=true;fig.add(ft);parts['foot'+s]=ft;
+    const bands=sex==='m'?[[-11,C.bottom[1],'bottom'],[C.top[0],C.top[1],'top'],[C.top[1],68,'skin']]
+                          :[[-11,C.bottom[1],'bottom'],[C.bottom[1],C.top[0],'skin'],[C.top[0],C.top[1],'top'],[C.top[1],68,'skin']];
+    const tl=B.torso.concat([[64,B.neck,B.neck*.9,B.neck],[68,B.neck*.95,B.neck*.85,B.neck*.95]]);
+    bands.forEach(([a,b,m],i)=>{const o=mesh(loft(tl,a,b,28,i===0,i===bands.length-1),mat[m],tf);if(m==='top'||(m==='skin'&&a<40&&a>0))chestMeshes.push(o);});
+    if(B.bust){[5.2,-5.2].forEach(z=>{const o=ell(tf,mat.top,[42,7.4,z,3.4,4,4.4]);chestMeshes.push(o);});}
+    // ---- head group
+    const hg=new THREE.Group();hg.matrixAutoUpdate=false;fig.add(hg);parts.head=hg;
+    const hs=B.head;
+    ell(hg,mat.skin,[0,0,0,8.6*hs,10.2*hs,8.2*hs]);
+    ell(hg,mat.skin,[-5.2*hs,2.4*hs,0,5.6*hs,4.6*hs,6*hs]);
+    ell(hg,mat.skin,[-1,8.1*hs,0,1.3,2.2,1.2]);
+    [8.1,-8.1].forEach(z=>ell(hg,mat.skin,[-.5,-.6,z*hs,1.7,2.6,1]));
+    [3.1,-3.1].forEach(z=>ell(hg,mat.eye,[1.3,7.2*hs,z*hs,.75,.85,.75],false));
+    const cap=new THREE.Mesh(new THREE.SphereGeometry(1,28,16,0,Math.PI*2,0,Math.PI*.52),mat.hair);cap.castShadow=true;
+    cap.scale.set(9.2*hs*SC,10.9*hs*SC,8.9*hs*SC);cap.position.set(-.9*SC,.8*SC,0);cap.rotation.z=.42;hg.add(cap);
+    if(B.hair==='pony'){ell(hg,mat.hair,[4.5,-8.2,0,3.6,3.6,3.6]);const pt=ell(hg,mat.hair,[-3,-11,0,2.8,7.2,3]);pt.rotation.z=.35;}
+    // ---- limbs
+    const ls=B.leg,as=B.arm;
+    const bone=(name,k,s,bands)=>{const f=frame();const lv=limbLv(k,s),L=LIMB[k][LIMB[k].length-1][0];
+      bands.forEach(([a,b,m])=>{if(b>a)mesh(loft(lv,a,Math.min(b,L),20,false,false),mat[m],f);});parts[name]={f};};
+    ['N','F'].forEach(q=>{
+      if(sex==='m'){bone('th'+q,'th',ls,[[0,C.thighShort,'bottom'],[C.thighShort,44,'skin']]);bone('sn'+q,'sn',ls,[[0,42,'skin']]);}
+      else{bone('th'+q,'th',ls,[[0,44,'bottom']]);bone('sn'+q,'sn',ls,[[0,C.legSkinFrom,'bottom'],[C.legSkinFrom,42,'skin']]);}
+      bone('ua'+q,'ua',as,C.sleeve?[[0,C.sleeve,'top'],[C.sleeve,30,'skin']]:[[0,30,'skin']]);
+      bone('fa'+q,'fa',as,[[0,28,'skin']]);
+    });
+    // joints (smooth connectors)
+    const J=(name,r,m)=>{const o=new THREE.Mesh(sph,mat[m]);o.scale.setScalar(r*SC);o.castShadow=true;fig.add(o);parts[name]=o;};
+    ['N','F'].forEach(q=>{J('knee'+q,5.1*ls,C.knee);J('ankle'+q,3.2*ls,'skin');J('sh'+q,5.2*as,C.shoulder);J('el'+q,3.4*as,'skin');J('hip'+q,8.2*ls,'bottom');});
+    ['N','F'].forEach(q=>{
+      const h=new THREE.Group();ell(h,mat.skin,[2.2,0,0,2.7*as,4*as,3.3*as]);ell(h,mat.skin,[1,1.8,2.2*(q==='N'?1:-1),1.2,2.4,1.2]);fig.add(h);parts['hand'+q]=h;
+      const sh=new THREE.Group();ell(sh,mat.shoe,[0,0,0,4.2,9.6,4.7]);ell(sh,mat.sole,[0,-1.9,0,4.5,10.1,4.9]);fig.add(sh);parts['foot'+q]=sh;
       if(e.A.db){const g=new THREE.Group();const hd=new THREE.Mesh(new THREE.CylinderGeometry(1.3*SC,1.3*SC,15*SC,10),mat.db);hd.rotation.x=Math.PI/2;g.add(hd);
-        [-6.5,6.5].forEach(z=>{const pl=new THREE.Mesh(new THREE.CylinderGeometry(4.6*SC,4.6*SC,3*SC,18),mat.db);pl.rotation.x=Math.PI/2;pl.position.z=z*SC;pl.castShadow=true;g.add(pl);});fig.add(g);parts['db'+s]=g;}});
+        [-6.5,6.5].forEach(z=>{const pl=new THREE.Mesh(new THREE.CylinderGeometry(4.6*SC,4.6*SC,3*SC,18),mat.db);pl.rotation.x=Math.PI/2;pl.position.z=z*SC;pl.castShadow=true;g.add(pl);});fig.add(g);parts['db'+q]=g;}
+    });
     if(e.floor){const m=new THREE.Mesh(new THREE.BoxGeometry(4.3,.03,1.25),std(css('--mat3d')));m.position.set(0,.015,0);m.receiveShadow=true;fig.add(m);}
     // muscles
-    const add=(key,kind)=>{(MUS3D[key]||[]).forEach(([seg,...v])=>{const segs=seg==='torso'?['torso']:[seg+'N',seg+'F'];segs.forEach(sn=>{muscles.push({m:ell(parts[sn].f,mat[kind],v,false),kind});});});};
+    const add=(key,kind)=>{(MUS3D[key]||[]).forEach(([seg,...v])=>{const segs=seg==='torso'?['torso']:[seg+'N',seg+'F'];segs.forEach(sn=>{
+      const vv=v.slice();if(seg==='torso'&&Math.abs(vv[2])>8)vv[2]=Math.sign(vv[2])*Math.min(Math.abs(vv[2]),B.shZ-3.5);
+      if(seg!=='torso'){const s=seg==='ua'||seg==='fa'?as:ls;vv[1]*=s;vv[3]*=s;vv[5]*=s;}
+      ell(parts[sn].f,mat[kind],vv,false);});});};
     e.prim.forEach(k=>add(k,'p'));e.sec.forEach(k=>{if(!e.prim.includes(k))add(k,'s');});
-    // brace ring
-    const pts=[];for(let i=0;i<32;i++){const a=i/32*Math.PI*2;pts.push(new THREE.Vector3(Math.cos(a)*11.5*SC,22*SC,Math.sin(a)*16*SC));}
+    const pts=[];for(let i=0;i<32;i++){const a=i/32*Math.PI*2;pts.push(new THREE.Vector3(Math.cos(a)*(a<Math.PI/2||a>Math.PI*1.5?9.5:9.2)*SC,20*SC,Math.sin(a)*(B.torso[4][1]+2.2)*SC));}
     brace=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,true),64,.8*SC,6,true),new THREE.MeshBasicMaterial({color:new THREE.Color(BR.hold.c),transparent:true,opacity:0}));tf.add(brace);
-    // breath particles
     const pg=new THREE.SphereGeometry(1.5*SC,8,6);
     for(let i=0;i<34;i++){const m=new THREE.Mesh(pg,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}));m.visible=false;fig.add(m);particles.push({m,life:0});}
-    // camera fit
     const box=new THREE.Box3();[norm(e.A),norm(e.B)].forEach(P=>{const s=solve(P);['hip','sh','head','kN','anN','kF','anF','wrN','wrF','toeN','toeF'].forEach(k=>box.expandByPoint(V(s[k],0)));});
     box.expandByPoint(new THREE.Vector3(box.min.x,0,0));
     box.getCenter(target);const size=box.getSize(new THREE.Vector3());
     size.y+=.45;target.y+=size.y*.1;
-    dist=Math.max(size.y*1.3,size.x*1.02,1.8)/(2*Math.tan(15*Math.PI/180))+.8;
+    dist=Math.max(size.y*1.12,size.x*.9,1.6)/(2*Math.tan(15*Math.PI/180))+.55;
     placeCam();
   }
   function placeCam(){const a=view.az*R,l=view.el*R;camera.position.set(target.x+Math.sin(a)*Math.cos(l)*dist,target.y+Math.sin(l)*dist,target.z+Math.cos(a)*Math.cos(l)*dist);camera.lookAt(target);}
-  const tmpM=new THREE.Matrix4(),Y=new THREE.Vector3(),X=new THREE.Vector3(),Z=new THREE.Vector3();
-  function setFrame(part,a,b,torso,scaleBone){
-    Y.subVectors(b,a);const len=Y.length();Y.normalize();
-    X.set(-Y.y,Y.x,0);if(torso)X.negate();X.normalize();Z.crossVectors(X,Y);
-    tmpM.makeBasis(X,Y,Z).setPosition(a);part.f.matrix.copy(tmpM);part.f.matrixWorldNeedsUpdate=true;
-    if(scaleBone&&part.m)part.m.scale.y=len;
-    return X.clone();
+  const tmpM=new THREE.Matrix4(),Y=new THREE.Vector3(),X=new THREE.Vector3(),Z=new THREE.Vector3(),UP=new THREE.Vector3(0,1,0);
+  function setFrame(part,a,b,torso){
+    Y.subVectors(b,a);Y.normalize();X.set(-Y.y,Y.x,0);if(torso)X.negate();X.normalize();Z.crossVectors(X,Y);
+    tmpM.makeBasis(X,Y,Z).setPosition(a);part.f.matrix.copy(tmpM);part.f.matrixWorldNeedsUpdate=true;return X.clone();
   }
   function draw(k,info,time){
     if(!fig)return;
-    const s=solve(lerpPose(norm(ex.A),norm(ex.B),k));
-    const P={hipN:V(s.hip,9),hipF:V(s.hip,-9),kneeN:V(s.kN,9),kneeF:V(s.kF,-9),ankleN:V(s.anN,9),ankleF:V(s.anF,-9),
-      toeN:V(s.toeN,9),toeF:V(s.toeF,-9),shN:V(s.sh,17.5),shF:V(s.sh,-17.5),elN:V(s.elN,19),elF:V(s.elF,-19),wrN:V(s.wrN,19),wrF:V(s.wrF,-19)};
+    const s=solve(lerpPose(norm(ex.A),norm(ex.B),k)),hz=B.hipZ,sz=B.shZ,az=sz+1.5;
+    const P={hipN:V(s.hip,hz),hipF:V(s.hip,-hz),kneeN:V(s.kN,hz),kneeF:V(s.kF,-hz),ankleN:V(s.anN,hz),ankleF:V(s.anF,-hz),
+      toeN:V(s.toeN,hz),toeF:V(s.toeF,-hz),shN:V(s.sh,sz),shF:V(s.sh,-sz),elN:V(s.elN,az),elF:V(s.elF,-az),wrN:V(s.wrN,az),wrF:V(s.wrF,-az)};
     const hipC=V(s.hip,0),shC=V(s.sh,0),head=V(s.head,0);
-    ['N','F'].forEach(q=>{setFrame(parts['th'+q],P['hip'+q],P['knee'+q],0,1);setFrame(parts['sn'+q],P['knee'+q],P['ankle'+q],0,1);
-      setFrame(parts['ua'+q],P['sh'+q],P['el'+q],0,1);setFrame(parts['fa'+q],P['el'+q],P['wr'+q],0,1);
-      const fd=new THREE.Vector3().subVectors(P['wr'+q],P['el'+q]).normalize();parts['hand'+q].position.copy(P['wr'+q]).addScaledVector(fd,2.5*SC);
-      parts['hand'+q].quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),fd);
+    ['N','F'].forEach(q=>{setFrame(parts['th'+q],P['hip'+q],P['knee'+q]);setFrame(parts['sn'+q],P['knee'+q],P['ankle'+q]);
+      setFrame(parts['ua'+q],P['sh'+q],P['el'+q]);setFrame(parts['fa'+q],P['el'+q],P['wr'+q]);
+      const fd=new THREE.Vector3().subVectors(P['wr'+q],P['el'+q]).normalize();parts['hand'+q].position.copy(P['wr'+q]);parts['hand'+q].quaternion.setFromUnitVectors(UP,fd);
       const td=new THREE.Vector3().subVectors(P['toe'+q],P['ankle'+q]);const tl=td.length();td.normalize();
-      const ft=parts['foot'+q];ft.position.copy(P['ankle'+q]).addScaledVector(td,tl*.42).add(new THREE.Vector3(0,-1.2*SC,0));ft.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),td);ft.scale.set(3.6*SC,9*SC,4.2*SC);
-      if(parts['db'+q])parts['db'+q].position.copy(P['wr'+q]).add(new THREE.Vector3(0,0,(q==='N'?1:-1)*1.5*SC));});
-    const front=setFrame(parts.torso,hipC,shC,1,0);
-    ['hipN','hipF','kneeN','kneeF','ankleN','ankleF','shN','shF','elN','elF'].forEach(j=>parts[j].position.copy(P[j]));
-    parts.head.position.copy(head);
-    const hd=new THREE.Vector3().subVectors(head,shC).normalize();parts.head.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),hd);
-    const face=new THREE.Vector3(-hd.y,hd.x,0).negate().normalize();
-    parts.nose.position.copy(head).addScaledVector(face,9.4*SC);
-    // breathing
+      const ft=parts['foot'+q];ft.position.copy(P['ankle'+q]).addScaledVector(td,tl*.4).add(new THREE.Vector3(0,-.9*SC,0));ft.quaternion.setFromUnitVectors(UP,td);
+      if(parts['db'+q])parts['db'+q].position.copy(P['wr'+q]).addScaledVector(fd,2*SC).add(new THREE.Vector3(0,0,(q==='N'?1:-1)*1.5*SC));});
+    setFrame(parts.torso,hipC,shC,1);
+    ['kneeN','kneeF','ankleN','ankleF','shN','shF','elN','elF','hipN','hipF'].forEach(j=>parts[j].position.copy(P[j]));
+    const hd=new THREE.Vector3().subVectors(head,shC).normalize();const face=new THREE.Vector3(-hd.y,hd.x,0).negate().normalize();
+    Z.crossVectors(face,hd);tmpM.makeBasis(face,hd,Z).setPosition(head);parts.head.matrix.copy(tmpM);parts.head.matrixWorldNeedsUpdate=true;
     const br=info?info.br:'free',bp=info?info.bp:0;
-    let chest=br==='in'?bp:br==='out'?1-bp:br==='hold'?1:br==='short'?.5+.25*Math.sin(time/180):.3+.15*Math.sin(time/700);
-    chestMeshes.forEach((m,i)=>{const b=i?[10,16,16.5]:[8.5,14,13];const f=1+.075*chest;m.scale.set(b[0]*f*SC,b[1]*SC,b[2]*(1+.04*chest)*SC);});
+    const chest=br==='in'?bp:br==='out'?1-bp:br==='hold'?1:br==='short'?.5+.25*Math.sin(time/180):.3+.15*Math.sin(time/700);
+    chestMeshes.forEach(m=>{const b=m.userData.bs||(m.userData.bs=m.scale.clone());m.scale.set(b.x*(1+.05*chest),b.y,b.z*(1+.025*chest));});
     brace.material.opacity=br==='hold'?.55+.3*Math.sin(time/120):0;
-    const pulse=.3+.22*Math.sin(time/260);
-    mat.p.emissiveIntensity=pulse+.1;mat.s.emissiveIntensity=pulse*.7;
-    // particles
+    const pulse=.3+.22*Math.sin(time/260);mat.p.emissiveIntensity=pulse+.15;mat.s.emissiveIntensity=pulse*.8;
     const dt=Math.min(50,time-lastT||16);lastT=time;
-    const mouth=head.clone().addScaledVector(face,10*SC).addScaledVector(hd,-3*SC);
+    const mouth=head.clone().addScaledVector(face,9.5*SC).addScaledVector(hd,-4*SC);
     const emit=(br==='in'||br==='out'||br==='short')&&!REDUCED;
     spawnAcc+=dt;
     while(emit&&spawnAcc>(br==='short'?110:55)){spawnAcc-=br==='short'?110:55;
       const pt=particles.find(q=>q.life<=0);if(!pt)break;
       const mode=br==='short'?(Math.floor(time/450)%2?'out':'in'):br;
       pt.mode=mode;pt.life=1;pt.m.visible=true;pt.m.material.color=new THREE.Color(BR[mode].c);
-      const spread=new THREE.Vector3((Math.random()-.5)*.35,(Math.random()-.5)*.35,(Math.random()-.5)*.5);
-      const dir=face.clone().add(spread).normalize();
+      const dir=face.clone().add(new THREE.Vector3((Math.random()-.5)*.35,(Math.random()-.5)*.35,(Math.random()-.5)*.5)).normalize();
       if(mode==='out'){pt.p=mouth.clone();pt.v=dir.multiplyScalar(.75+Math.random()*.3);}
       else{pt.p=mouth.clone().addScaledVector(dir,.55+Math.random()*.2);pt.v=dir.multiplyScalar(-(.75+Math.random()*.2));}}
     if(!emit)spawnAcc=0;
     particles.forEach(q=>{if(q.life<=0){q.m.visible=false;return;}q.life-=dt/750;q.p.addScaledVector(q.v,dt/1000);q.m.position.copy(q.p);
-      q.m.material.opacity=Math.max(0,Math.sin(Math.PI*Math.min(1,1-q.life)))*.85;const sc=q.mode==='out'?1+ (1-q.life)*1.2:.6+q.life*.9;q.m.scale.setScalar(sc);});
+      q.m.material.opacity=Math.max(0,Math.sin(Math.PI*Math.min(1,1-q.life)))*.85;q.m.scale.setScalar(q.mode==='out'?1+(1-q.life)*1.2:.6+q.life*.9);});
     renderer.render(scene,camera);
   }
   function size(w,h){renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
@@ -849,7 +926,7 @@ try{if(HAS3D){STAGE=Stage3D(false);}}catch(e){HAS3D=false;}
 function attachStage(host,ex){
   host.innerHTML='';host.classList.add('fig3d');
   const cv=STAGE.renderer.domElement;cv.className='cv3d';host.appendChild(cv);
-  STAGE.view.az=38;STAGE.view.el=12;STAGE.build(ex);
+  STAGE.view.az=38;STAGE.view.el=12;STAGE.build(ex,curSex());
   const fit=()=>{const r=host.getBoundingClientRect();if(r.width>0)STAGE.size(Math.round(r.width),Math.round(r.height));};
   fit();if(window.ResizeObserver){const ro=new ResizeObserver(fit);ro.observe(host);}
   let drag=null;
@@ -884,7 +961,7 @@ function tick(now){
 requestAnimationFrame(tick);
 function thumbSVG(host,ex){
   if(HAS3D){try{
-    const key=ex.id+(document.documentElement.dataset.theme||'')+(matchMedia('(prefers-color-scheme: dark)').matches?'d':'l');
+    const key=ex.id+curSex()+(document.documentElement.dataset.theme||'')+(matchMedia('(prefers-color-scheme: dark)').matches?'d':'l');
     if(!THUMBS[key]){if(!TSTAGE){TSTAGE=Stage3D(true);TSTAGE.size(208,160);}TSTAGE.view.az=40;TSTAGE.view.el=10;TSTAGE.build(ex);
       const t=timeline(ex,ex.kind==='interval'?0:ex.tm[0]+10);TSTAGE.draw(t.k,{br:'free',bp:0},0);THUMBS[key]=TSTAGE.renderer.domElement.toDataURL('image/png');}
     host.innerHTML=`<img src="${THUMBS[key]}" alt="" style="width:100%;height:100%;object-fit:cover;display:block">`;return;}catch(e){}}
@@ -937,7 +1014,7 @@ const todayStr=()=>new Date().toISOString().slice(0,10);
 const ago=n=>new Date(Date.now()-n*dayMs).toISOString().slice(0,10);
 function sampleState(){
   return {sample:true,nick:'민트곰',
-    prof:{goal:'lose',part:'belly',weeks:8,days:3,height:163,weight:64,exp:1,push:6,plank:35,squat:28,knee:false,back:false},
+    prof:{sex:'f',goal:'lose',part:'belly',weeks:8,days:3,height:163,weight:64,exp:1,push:6,plank:35,squat:28,knee:false,back:false},
     lvAdj:0,off:{},sessions:[{d:ago(15),r:3},{d:ago(12),r:3},{d:ago(10),r:4},{d:ago(8),r:3},{d:ago(5),r:2},{d:ago(3),r:3},{d:ago(1),r:3}],
     notif:{on:true,time:'19:30',quote:true,weekly:true},share:{weight:false,bmi:false,puzzle:true,streak:true}};
 }
@@ -955,7 +1032,8 @@ function bmiCat(b){ // 대한비만학회 기준
   if(b<30)return ['1단계 비만','var(--m2)'];if(b<35)return ['2단계 비만','var(--m1)'];return ['3단계 비만','var(--m1)'];}
 function scores(p){
   const s=(v,c)=>v>=c[2]?3:v>=c[1]?2:v>=c[0]?1:0;
-  return {exp:+p.exp,push:s(p.push,[5,15,30]),plank:s(p.plank,[30,60,120]),squat:s(p.squat,[20,35,50])};
+  const pc=p.sex==='f'?[3,10,20]:p.sex==='m'?[5,15,30]:[4,12,25];
+  return {exp:+p.exp,push:s(p.push,pc),plank:s(p.plank,[30,60,120]),squat:s(p.squat,[20,35,50])};
 }
 function baseLevel(p){const sc=scores(p),tot=sc.exp+sc.push+sc.plank+sc.squat;return tot<=2?1:tot<=4?2:tot<=7?3:tot<=9?4:5;}
 function level(){return Math.max(1,Math.min(5,Math.round(baseLevel(S.prof)+S.lvAdj)));}
@@ -966,7 +1044,7 @@ function plan(){
   let ids;
   if(g==='lose')ids=['squat','pushup','bridge','row','plank','highknee'];
   else if(g==='health')ids=['squat','pushup','row','bridge','birddog','highknee'];
-  else if(g==='shape')ids=['squat','lunge','bridge','pushup','row','plank'];
+  else if(g==='shape')ids=p.sex==='m'?['squat','pushup','press','row','rdl','plank']:['squat','lunge','bridge','pushup','row','plank'];
   else if(g==='muscle')ids=['squat','rdl','pushup','row','press','lunge'];
   else{const x={belly:['plank','curlup','climber'],lower:['bridge','lunge','rdl'],upper:['press','pushup'],back:['row','birddog','rdl']}[p.part];
     ids=[...new Set(['squat','pushup','row',...x])];}
@@ -991,19 +1069,20 @@ function plan(){
   if(g==='part')notes.push('특정 부위의 지방만 골라 빼는 건 어려워요. 전신 운동으로 체지방을 줄이면서 목표 부위 근육에 볼륨을 더 주는 구성이에요.');
   const sets=g==='muscle'?(L<=2?3:4):g==='lose'?(L<=2?2:3):g==='health'?2:3;
   const base=g==='muscle'?10:g==='lose'?13:12;
-  const rest=g==='muscle'?'60–90초':g==='lose'?'30–45초':'45–60초';
+  let restSec=g==='muscle'?75:g==='lose'?40:50;if(p.sex==='f')restSec=Math.max(30,restSec-10);
+  const rest=`${restSec}초`;
   const items=ids.map(id=>{
     const ex=EXM[id],cu=S.cust[id]||{},off=(S.off[id]||0)+(cu.reps||0);let dose,unit,vi=L-1;
     if(lowImpact(p)&&ex.kind==='interval')vi=0;
     if(p.knee&&id==='squat')vi=0;
     if(ex.kind==='hold'){const sec=Math.max(8,(id==='curlup'?6+L*1:12+L*6)+off*3);dose=id==='curlup'?`${sec}초 × 5회`:`${sec}초`;unit='hold';}
     else if(ex.kind==='interval'){const w=15+L*5+off*3,r=Math.max(15,45-L*5);dose=`${w}초 / 휴식 ${r}초`;unit='round';}
-    else{const reps=Math.max(5,Math.min(25,base+ex.repAdj+off));dose=`${reps}회${ex.perSide?' (한쪽)':''}`;unit='reps';}
+    else{const sexAdj=p.sex==='f'&&['squat','lunge','bridge','rdl'].includes(id)?2:0;const reps=Math.max(5,Math.min(25,base+ex.repAdj+off+sexAdj));dose=`${reps}회${ex.perSide?' (한쪽)':''}`;unit='reps';}
     const nsets=Math.max(1,Math.min(10,(ex.kind==='interval'?4+L:(id==='curlup'?Math.max(2,sets-1):sets))+(cu.sets||0)));
-    return {ex,dose,sets:nsets,variant:ex.vars[vi],unit,off:S.off[id]||0,cust:!!(cu.sets||cu.reps),pref:pf(id)};
+    return {ex,dose,sets:nsets,variant:ex.vars[vi],unit,off:S.off[id]||0,cust:!!(cu.sets||cu.reps),pref:pf(id),wt:weightFor(id,L,p.sex,g)};
   });
   const cardio=g==='muscle'?'주 2회 20분 걷기(선택)':g==='lose'?'루틴 외 주 150분 이상 빠르게 걷기 권장':'주 150분 중강도 유산소 권장';
-  const P0={L,items,sets,rest,notes,cardio};
+  const P0={L,items,sets,rest,restSec,notes,cardio};
   const est=estimate(P0);P0.est=est;P0.min=est.totalMin;
   return P0;
 }
@@ -1022,7 +1101,7 @@ const MET={
 const EXMET={squat:'body',lunge:'body',pushup:'body',bridge:'body',rdl:'dumb',row:'dumb',press:'dumb',curlup:'core',birddog:'core',plank:'core',highknee:'hiit',climber:'hiit'};
 function estimate(P){
   const kg=Math.max(30,+S.prof.weight||60),kpm=m=>m*3.5*kg/200;
-  const restSet=P.rest.startsWith('60')?75:P.rest.startsWith('30')?40:50;
+  const restSet=P.restSec;
   let work=0,rest=0,kcal=0;
   const rows=P.items.map((it,idx)=>{
     const ex=it.ex;let w=0,r=0,key=EXMET[ex.id];
@@ -1049,6 +1128,20 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-pref]');if
   b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));
   toast(v>0?`${EXM[id].name}: 루틴에 더 자주 넣을게요`:v<0?`${EXM[id].name}: 추천을 줄일게요`:`${EXM[id].name}: 기본 추천으로 돌렸어요`);
   if(b.closest('#routineCard'))renderToday();});
+/* 권장 중량 (한 손 덤벨, kg) — 성별·레벨별 시작값. 마지막 2회가 힘든 무게(RIR 2)로 조절 */
+const WT={
+ squat:{from:3,f:[[4,6],[6,8],[8,12]],m:[[8,10],[12,16],[16,20]],how:'고블릿 · 덤벨 1개'},
+ lunge:{from:3,f:[[2,4],[4,6],[6,8]],m:[[4,6],[8,10],[10,14]],how:'양손'},
+ bridge:{from:4,f:[[6,10],[10,14]],m:[[10,14],[16,20]],how:'골반 위 덤벨 1개'},
+ rdl:{from:1,f:[[1,2],[2,4],[4,6],[6,8],[8,12]],m:[[2,4],[4,6],[8,10],[10,14],[14,18]],how:'양손'},
+ row:{from:1,f:[[1,2],[2,3],[3,5],[5,7],[7,10]],m:[[2,4],[4,6],[6,8],[8,12],[12,16]],how:'양손'},
+ press:{from:1,f:[[1,2],[1,2],[2,4],[4,5],[5,7]],m:[[2,3],[3,4],[4,6],[6,8],[8,12]],how:'양손'}
+};
+function weightFor(id,L,sex,goal){const w=WT[id];if(!w||L<w.from)return null;
+  const i=Math.min(L-w.from,w.f.length-1);let r=sex==='f'?w.f[i]:sex==='m'?w.m[i]:[Math.round((w.f[i][0]+w.m[i][0])/2),Math.round((w.f[i][1]+w.m[i][1])/2)];
+  if(goal==='muscle')r=[r[0]+(sex==='f'?1:2),r[1]+(sex==='f'?1:2)];
+  if(r[1]<=2)return `${w.how} ${r[1]<=1?'물병 500ml':'1~2kg (물병 1L)'}`;
+  return `${w.how} ${r[0]}~${r[1]}kg`;}
 function streak(){const ds=new Set(S.sessions.map(s=>s.d));let n=0;
   // 주 N회 기준으로 "계획대로 이어간 주" 계산
   const per=S.prof.days;for(let w=0;w<52;w++){let c=0;for(let d=0;d<7;d++)if(ds.has(ago(w*7+d)))c++;if(c>=Math.min(per,2)||(w===0&&c>0))n++;else break;}return n;}
@@ -1099,7 +1192,7 @@ function renderToday(){
     <div class="rlist">${P.items.map((it,i)=>`
       <div class="ritem">
         <div class="thumb" data-thumb="${it.ex.id}"></div>
-        <div><h4>${it.ex.name}</h4><div class="meta">${esc(it.variant)}</div>
+        <div><h4>${it.ex.name}</h4><div class="meta">${esc(it.variant)}${it.wt?` · <b class="wt">${esc(it.wt)}</b>`:''}</div>
           <div class="tags" style="margin-top:4px">${it.ex.prim.map(m=>`<span class="chip p">${MUS[m]}</span>`).join('')}<button class="link" data-guide="${it.ex.id}">자세 가이드 →</button></div></div>
         <div class="dose">${it.sets}${it.unit==='round'?'라운드':'세트'} × ${it.dose}<small>약 ${Math.max(1,Math.round((P.est.rows[i].work+P.est.rows[i].rest)/60))}분 · ${Math.round(P.est.rows[i].kcal)}kcal${it.cust?' · 직접 조정':it.off?` · 피드백 ${it.off>0?'+':''}${it.off}`:''}${it.pref>0?' · 자주':''}</small></div>
         ${EDIT?`<div class="editrow">
@@ -1144,7 +1237,7 @@ function cue(left){
 }
 function say(t){if(!cueSet().voice||!('speechSynthesis' in window))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='ko-KR';u.rate=1.05;speechSynthesis.speak(u);}catch(e){}}
 function cueLast(){beep(988,.12,.26);setTimeout(()=>beep(1319,.18,.26),140);vib([90,60,90,60,90]);}
-function restOf(P){return P.rest.startsWith('60')?75:P.rest.startsWith('30')?40:50;}
+function restOf(P){return P.restSec;}
 function remainingSec(restLeft){ // 남은 전체 시간 추정(초)
   const {P,i,set,resting}=SES;let t=restLeft||0;
   P.items.forEach((it,j)=>{const r=P.est.rows[j];if(!r||j<i)return;
@@ -1194,7 +1287,7 @@ function renderSession(){
       <div class="stagebar"><span class="phase"><span class="dot"></span><span id="sesPh"></span></span><span class="muted" style="font-size:13px">${esc(ex.tempo)}</span></div>
     </div>
     <div class="card" style="display:grid;gap:16px">
-      <div><div class="eyebrow">${esc(it.variant)}</div>
+      <div><div class="eyebrow">${esc(it.variant)}${it.wt?' · '+esc(it.wt):''}</div>
       <div class="setdots" style="margin-top:10px">${Array.from({length:it.sets},(_,k)=>`<i class="${k<set-1?'on':k===set-1?'cur':''}"></i>`).join('')}</div>
       <button type="button" class="ob-skip" id="addSet" style="margin-top:6px">+ 이 운동 한 세트 더 (오늘만)</button></div>
       <div id="sesBody"></div>
@@ -1241,7 +1334,7 @@ function finishSet(){
   const it=SES.P.items[SES.i];
   const last=SES.i===SES.P.items.length-1&&SES.set===it.sets;
   if(last){stopAll();SES=null;keepAwake(false);say('오늘 운동 끝! 수고했어요');showFeedback(true);return;}
-  let restSec=SES.P.rest.startsWith('60')?75:SES.P.rest.startsWith('30')?40:50;
+  let restSec=SES.P.restSec;
   if(it.unit==='round')restSec=Math.max(15,45-SES.P.L*5);
   const nextIt=SES.set<it.sets?it:SES.P.items[SES.i+1];
   SES.nextLabel=SES.set<it.sets?`${it.ex.name} ${SES.set+1}세트`:nextIt.ex.name;
@@ -1310,8 +1403,9 @@ function showFeedback(fromSession){
 let D=null,OBSTEP=1;
 function renderDiag(){
   const OB=FIRST;
-  D=OB?{goal:'lose',part:'belly',weeks:8,days:3,height:'',weight:'',exp:0,push:'',plank:'',squat:'',knee:false,back:false,nick:''}:JSON.parse(JSON.stringify(S.prof));
+  D=OB?{sex:'n',goal:'lose',part:'belly',weeks:8,days:3,height:'',weight:'',exp:0,push:'',plank:'',squat:'',knee:false,back:false,nick:''}:JSON.parse(JSON.stringify(S.prof));
   if(!OB)D.nick=S.sample?'':S.nick;
+  if(!D.sex)D.sex='n';
   if(OB)OBSTEP=1;
   const el=$('#p-diag');
   const opts=(name,list,cur)=>`<div class="opts" role="group">${list.map(o=>`<button type="button" class="opt" data-f="${name}" data-v="${o.id}" aria-pressed="${String(o.id)===String(cur)}">${o.n}</button>`).join('')}</div>`;
@@ -1335,6 +1429,7 @@ function renderDiag(){
         <label class="inp"><span>키 (cm)</span><input id="f-height" type="number" inputmode="decimal" min="120" max="220" placeholder="예: 165" value="${D.height}"></label>
         <label class="inp"><span>몸무게 (kg)</span><input id="f-weight" type="number" inputmode="decimal" min="30" max="250" placeholder="예: 60" value="${D.weight}"></label>
       </div>
+      <div class="field"><span class="lbl">성별</span>${opts('sex',[{id:'f',n:'여성'},{id:'m',n:'남성'},{id:'n',n:'선택 안 함'}],D.sex||'n')}<span class="hint">체력 테스트 기준, 시작 중량, 휴식 시간, 3D 모형에 반영돼요.</span></div>
       <div class="field"><span class="lbl">운동 경력</span>${opts('exp',EXPS,D.exp)}</div>
       <div class="field"><span class="lbl">불편한 곳이 있나요?</span>
         <label class="check"><input type="checkbox" id="f-knee" ${D.knee?'checked':''}> 무릎이 자주 아파요</label>
@@ -1421,6 +1516,8 @@ function renderGuide(){
   $$('[data-ex]',el).forEach(b=>b.onclick=()=>{G.id=b.dataset.ex;$$('[data-ex]',el).forEach(x=>x.setAttribute('aria-current',x===b));renderDetail();if(innerWidth<900)$('#gDetail').scrollIntoView({behavior:'smooth',block:'start'});});
   renderDetail();
 }
+const PULSE=(c='var(--accent)',w=22)=>`<svg class="pulse" viewBox="0 0 24 12" width="${w}" height="${w/2}" aria-hidden="true"><path d="M1 6h5l2-4 3 8 2.5-6 1.5 2H23" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+function hlText(t,hl){let o=esc(t);(hl||[]).forEach(h=>{const e=esc(h);if(o.includes(e))o=o.replace(e,`<strong class="kp">${e}</strong>`);});return o;}
 function renderDetail(){
   const ex=EXM[G.id],L=level(),host=$('#gDetail');
   const n=(i)=>`<span class="num">${String(i).padStart(2,'0')}</span>`;
@@ -1429,7 +1526,7 @@ function renderDetail(){
      <div class="stage">
        <div class="figwrap">${stageHTML('g')}</div>
        ${stripHTML('g',ex)}
-       ${HAS3D?`<div class="stagebar viewbar" style="border-top:0;padding-top:0"><span class="muted" style="font-size:12.5px;font-weight:600">시점</span><div class="seg" role="group" aria-label="시점">${[['측면',0],['사선',38],['정면',90],['후면',-90]].map(([n,a])=>`<button data-az="${a}" aria-pressed="${a===38}">${n}</button>`).join('')}</div></div>`:''}
+       ${HAS3D?`<div class="stagebar viewbar" style="border-top:0;padding-top:0"><span class="muted" style="font-size:12.5px;font-weight:600">모형</span><div class="seg" role="group" aria-label="모형">${[['f','여성'],['m','남성']].map(([k,n])=>`<button data-sex="${k}" aria-pressed="${(curSex()==='m'?'m':'f')===k}">${n}</button>`).join('')}</div><span class="muted" style="font-size:12.5px;font-weight:600">시점</span><div class="seg" role="group" aria-label="시점">${[['측면',0],['사선',38],['정면',90],['후면',-90]].map(([n,a])=>`<button data-az="${a}" aria-pressed="${a===38}">${n}</button>`).join('')}</div></div>`:''}
        <div class="stagebar"><span class="phase"><span class="dot"></span><span id="gPh"></span></span><span class="sp"></span>
          <div class="seg" role="group" aria-label="재생 속도"><button data-sp="0.5" aria-pressed="false">0.5×</button><button data-sp="1" aria-pressed="true">1×</button></div>
          <button class="btn sm" id="gPause" aria-pressed="false">일시정지</button></div>
@@ -1441,18 +1538,26 @@ function renderDetail(){
        <div class="tags">${ex.prim.map(m=>`<span class="chip p">${MUS[m]}</span>`).join('')}${ex.sec.map(m=>`<span class="chip s">${MUS[m]}</span>`).join('')}</div>
        <div class="prefrow">${prefSeg(ex.id)}</div></div>
      <div class="mmap mmap-inline card" style="padding:14px">${muscleMap(ex.prim,ex.sec)}<div class="legend"><span><i style="background:var(--m1)"></i>주동근</span><span><i style="background:var(--m2)"></i>보조근</span></div></div>
+     <div class="keycard"><div class="kc-h">${PULSE()}<b>이것만 기억하세요</b><span class="muted">핵심 포인트 3</span></div>
+       <ol class="kc-list">${ex.key.map(k=>`<li>${PULSE('var(--accent)',18)}<span>${esc(k)}</span></li>`).join('')}</ol></div>
      <div class="tempo"><span><b>템포</b> ${esc(ex.tempo)}</span><span><b>호흡</b> ${esc(ex.breath)}</span></div>
      <div class="brlegend" style="padding:0">${(ex.brCycle?[['리듬','in'],['리듬','out']]:ex.ph.map((n,i)=>[n,ex.br[i]]).filter((x,i)=>ex.tm[i]>=120&&x[0])).map(([n,b])=>`<span><i style="background:${BR[b].c}"></i>${ex.brCycle?'':esc(n)+' · '}${BR[b].t}</span>`).join('')}</div>
-     <div class="gsec"><h3>${n(1)} 준비 자세</h3><ol class="steps">${ex.setup.map(s=>`<li>${esc(s)}</li>`).join('')}</ol></div>
-     <div class="gsec"><h3>${n(2)} 동작 순서</h3><ol class="steps">${ex.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol></div>
-     <div class="gsec"><h3>${n(3)} 트레이너 큐</h3>${ex.cues.map(c=>`<div class="cue"><b>“${esc(c[0])}”</b>${esc(c[1])}</div>`).join('')}</div>
-     <div class="gsec"><h3>${n(4)} 흔한 실수와 고치는 법</h3><div class="mist">${ex.mistakes.map(m=>`<div><b>${esc(m[0])}</b>${esc(m[1])}</div>`).join('')}</div></div>
-     <div class="gsec"><h3>${n(5)} 레벨별 변형</h3><div class="vars">${ex.vars.map((v,i)=>`<div class="var ${i+1===L?'me':''}"><span class="l">Lv.${i+1}</span><span>${esc(v)}${i+1===L?' <b style="color:var(--accent)">· 내 레벨</b>':''}</span></div>`).join('')}</div></div>
-     <div class="gsec"><h3>${n(6)} 왜 이 운동인가요?</h3><div class="evid">${esc(ex.ev)}<div style="margin-top:8px;font-size:13px">${ex.refs.map(r=>`<a href="${REFS[r].u}" target="_blank" rel="noopener">${esc(REFS[r].t.split(' (')[0])} (${REFS[r].t.match(/\((\d{4})\)/)[1]})</a>`).join(' · ')}</div></div>
-       <div class="note">${esc(ex.safety)}</div></div>
+     <div class="gsec"><h3>${n(1)} 준비 자세</h3><ol class="steps">${ex.setup.map(s=>`<li>${hlText(s,ex.hl)}</li>`).join('')}</ol></div>
+     <div class="gsec"><h3>${n(2)} 동작 순서 <span class="chip acc">${PULSE('var(--accent)',16)} 굵은 글씨가 포인트</span></h3><ol class="steps">${ex.steps.map(s=>`<li>${hlText(s,ex.hl)}</li>`).join('')}</ol></div>
+     <details class="acc" open><summary>${PULSE()}<span class="t">${n(3)} 트레이너 큐</span><span class="sub">${ex.cues.length}가지 · 운동 중 떠올릴 한 문장</span></summary>
+       <div class="acc-b">${ex.cues.map(c=>`<div class="cue"><b><span class="q">“</span>${esc(c[0])}<span class="q">”</span></b>${esc(c[1])}</div>`).join('')}</div></details>
+     <details class="acc"><summary>${PULSE('var(--m1)')}<span class="t">${n(4)} 흔한 실수와 고치는 법</span><span class="sub">${ex.mistakes.map(m=>esc(m[0])).join(' · ')}</span></summary>
+       <div class="acc-b mist">${ex.mistakes.map(m=>`<div><b>${esc(m[0])}</b><span><span class="fix">이렇게 고쳐요</span> ${esc(m[1])}</span></div>`).join('')}</div></details>
+     <details class="acc"><summary>${PULSE()}<span class="t">${n(5)} 레벨별 변형</span><span class="sub">내 레벨 Lv.${L} · ${esc(ex.vars[L-1])}</span></summary>
+       <div class="acc-b vars">${ex.vars.map((v,i)=>`<div class="var ${i+1===L?'me':''}"><span class="l">Lv.${i+1}</span><span>${esc(v)}${i+1===L?' <b style="color:var(--accent)">· 내 레벨</b>':''}</span></div>`).join('')}
+       ${weightFor(ex.id,L,S.prof.sex,S.prof.goal)?`<div class="note" style="margin-top:6px">${PULSE('var(--accent)',16)} 내 권장 중량: <b>${esc(weightFor(ex.id,L,S.prof.sex,S.prof.goal))}</b> · 마지막 2회가 힘든 무게로 조절하세요</div>`:''}</div></details>
+     <details class="acc"><summary>${PULSE()}<span class="t">${n(6)} 왜 이 운동인가요?</span><span class="sub">연구 근거 ${ex.refs.length}편</span></summary>
+       <div class="acc-b"><div class="evid">${esc(ex.ev)}<div style="margin-top:8px;font-size:13px">${ex.refs.map(r=>`<a href="${REFS[r].u}" target="_blank" rel="noopener">${esc(REFS[r].t.split(' (')[0])} (${REFS[r].t.match(/\((\d{4})\)/)[1]})</a>`).join(' · ')}</div></div></div></details>
+     <div class="note safety">${PULSE('var(--warn)',18)} <span><b>안전 체크</b> ${esc(ex.safety)}</span></div></div>
    </div></div>`;
   const pl=makePlayer($('#gFig'),ex,stageRefs('g'));
   $$('[data-az]',host).forEach(b=>b.onclick=()=>{STAGE.view.az=+b.dataset.az;STAGE.view.el=b.dataset.az==='0'?6:12;STAGE.placeCam();$$('[data-az]',host).forEach(x=>x.setAttribute('aria-pressed',x===b));});
+  $$('[data-sex]',host).forEach(b=>b.onclick=()=>{GSEX=b.dataset.sex;const az=STAGE.view.az,el=STAGE.view.el;STAGE.build(ex,GSEX);STAGE.view.az=az;STAGE.view.el=el;STAGE.placeCam();$$('[data-sex]',host).forEach(x=>x.setAttribute('aria-pressed',x===b));});
   $('#gFig').addEventListener('viewchange',()=>$$('[data-az]',host).forEach(x=>x.setAttribute('aria-pressed','false')));
   $$('[data-sp]',host).forEach(b=>b.onclick=()=>{pl.speed=+b.dataset.sp;$$('[data-sp]',host).forEach(x=>x.setAttribute('aria-pressed',x===b));});
   $('#gPause').onclick=e=>{pl.paused=!pl.paused;e.target.textContent=pl.paused?'재생':'일시정지';e.target.setAttribute('aria-pressed',pl.paused);};
