@@ -80,8 +80,8 @@ section[role="tabpanel"]{display:grid;gap:20px}
 .btn.sm{padding:6px 12px;font-size:13px}
 .btn.lg{padding:14px 22px;font-size:16px;border-radius:12px}
 .chip{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;background:var(--surface2);font-size:12.5px;font-weight:600;color:var(--muted);white-space:nowrap}
-.chip.p{background:color-mix(in srgb,var(--mp) 18%,transparent);color:var(--ms-ink);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--mp) 45%,transparent)}
-.chip.s{background:color-mix(in srgb,var(--ms) 16%,transparent);color:var(--muted)}
+.chip.p{background:color-mix(in srgb,var(--mp) 22%,transparent);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--mp)}
+.chip.s{background:transparent;color:var(--muted);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ms) 70%,transparent)}
 .chip.acc{background:var(--accent-soft);color:var(--accent)}
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:20px}
 
@@ -442,6 +442,63 @@ body.has-mini main{padding-bottom:96px}
 .brlegend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);padding:6px 12px 0}
 .brlegend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px}
 @media (max-width:520px){.hud{padding:6px 10px 6px 6px}.hud .ring{width:30px;height:30px}.hud .ring i{width:24px;height:24px}.hud small{display:none}.hud-r{display:none}}
+
+/* ===== NEON SKIN (기본 테마) ===== */
+:root[data-skin="neon"]{color-scheme:dark;
+  --bg:#0B0D10;--surface:rgba(22,25,30,.92);--surface2:#1B1F25;--ink:#F1F4F6;--muted:#8A949C;--line:rgba(255,255,255,.08);
+  --accent:#2BFFB5;--accent-ink:#02140E;--accent-soft:rgba(43,255,181,.12);
+  --m1:#FF4D8D;--m2:#FFD23F;--mp:#2BFFB5;--ms:#3DA9FF;--ms-ink:#7FFFD7;--mus:#132330;--sil:#0B151D;--fig:#DCE7E2;--fig-far:#5E7068;
+  --floor:#1A2A33;--mat:#101C24;--ok:#2BFFB5;--warn:#FFD23F;--glow:0 0 18px rgba(43,255,181,.25);--neon-b:#3DA9FF;--neon-p:#B26BFF;--neon-y:#FFD23F;
+  --shadow:0 0 0 1px rgba(64,255,200,.08),0 10px 30px rgba(0,0,0,.45)}
+:root[data-skin="neon"] body{background:radial-gradient(1100px 620px at 50% -12%,#1A1F25,transparent 70%),linear-gradient(180deg,#101316,#0A0C0E 60%);background-attachment:fixed}
+:root[data-skin="neon"] .top{background:rgba(5,8,12,.78);border-bottom-color:rgba(64,255,200,.16)}
+:root[data-skin="neon"] .card,:root[data-skin="neon"] .ritem,:root[data-skin="neon"] .exbtn,:root[data-skin="neon"] .stage,:root[data-skin="neon"] .acc,:root[data-skin="neon"] .pz{
+  background:linear-gradient(180deg,#191C21,#121418);border-color:rgba(255,255,255,.07);box-shadow:0 1px 0 rgba(255,255,255,.03) inset,0 12px 30px rgba(0,0,0,.35)}
+:root[data-skin="neon"] .stage{background:linear-gradient(180deg,#15181C,#0E1013);box-shadow:0 0 0 1px rgba(255,255,255,.05),0 30px 60px -30px var(--glowp,#2BFFB5)}
+:root[data-skin="neon"] .dhead .en{color:var(--glowp,var(--accent));font-weight:600;letter-spacing:.02em}
+:root[data-skin="neon"] .h-sec,:root[data-skin="neon"] .hello h1,:root[data-skin="neon"] .dhead h2,:root[data-skin="neon"] .ob-head h1{text-shadow:none;letter-spacing:-.02em}
+:root[data-skin="neon"] .eyebrow{color:#6FD9C0;letter-spacing:.12em}
+:root[data-skin="neon"] .btn{background:rgba(14,24,34,.9);border-color:rgba(64,255,200,.22);color:var(--ink)}
+:root[data-skin="neon"] .btn:hover{border-color:var(--accent);box-shadow:0 0 14px rgba(43,255,181,.25)}
+:root[data-skin="neon"] .btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);box-shadow:0 0 18px rgba(43,255,181,.45),0 0 2px rgba(43,255,181,.9)}
+:root[data-skin="neon"] .tab[aria-selected="true"],:root[data-skin="neon"] .opt[aria-pressed="true"],:root[data-skin="neon"] .seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);box-shadow:0 0 14px rgba(43,255,181,.4)}
+:root[data-skin="neon"] .opt,:root[data-skin="neon"] .seg{background:rgba(12,20,28,.7);border-color:rgba(64,255,200,.2)}
+:root[data-skin="neon"] .stat,:root[data-skin="neon"] .estbox,:root[data-skin="neon"] .note,:root[data-skin="neon"] .cue,:root[data-skin="neon"] .srow{background:rgba(20,34,46,.7)}
+:root[data-skin="neon"] .progress i,:root[data-skin="neon"] .lvbar i.on,:root[data-skin="neon"] .estbar i{box-shadow:0 0 10px rgba(43,255,181,.6)}
+:root[data-skin="neon"] .keycard{border-color:rgba(43,255,181,.45);background:linear-gradient(180deg,rgba(43,255,181,.10),rgba(43,255,181,.02));box-shadow:0 0 24px rgba(43,255,181,.10)}
+:root[data-skin="neon"] .kc-h b,:root[data-skin="neon"] .kc-list li{text-shadow:0 0 10px rgba(43,255,181,.35)}
+:root[data-skin="neon"] strong.kp{color:#fff;background:linear-gradient(transparent 58%,rgba(43,255,181,.35) 58%)}
+:root[data-skin="neon"] .banner{background:rgba(43,255,181,.10);border:1px solid rgba(43,255,181,.25)}
+:root[data-skin="neon"] .note.warn,:root[data-skin="neon"] .note.safety{background:rgba(255,210,63,.08);border:1px solid rgba(255,210,63,.2)}
+:root[data-skin="neon"] .srow.cur{box-shadow:inset 0 0 0 2px var(--accent),0 0 18px rgba(43,255,181,.25)}
+:root[data-skin="neon"] .srow.done{background:rgba(43,255,181,.12)}
+:root[data-skin="neon"] .stage .fig.fig3d{background:radial-gradient(ellipse at 50% 38%,#23282E,#0C0E11 72%),#0C0E11}
+:root[data-skin="neon"] .stage .figwrap::after{content:"";position:absolute;left:0;right:0;bottom:0;height:40%;pointer-events:none;background:radial-gradient(ellipse at 50% 120%,color-mix(in srgb,var(--glowp,#2BFFB5) 26%,transparent),transparent 70%)}
+:root[data-skin="neon"] .cv3d{filter:none}
+:root[data-skin="neon"] .ritem .thumb,:root[data-skin="neon"] .exbtn .thumb,:root[data-skin="neon"] .nextprev .thumb{background:radial-gradient(ellipse at 50% 40%,#262B31,#0C0E11 80%)}
+:root[data-skin="neon"] .hud{background:rgba(5,10,16,.72);border-color:rgba(64,255,200,.2)}
+:root[data-skin="neon"] .logo .mark svg{filter:drop-shadow(0 0 8px rgba(43,255,181,.55));animation:hb 1.6s ease-in-out infinite}
+:root[data-skin="neon"] .sheet{background:#070C12}:root[data-skin="neon"] .sh-head{background:#070C12}
+:root[data-skin="neon"] .minibar{background:#0B1620;color:var(--ink);border:1px solid rgba(43,255,181,.35);box-shadow:0 0 24px rgba(43,255,181,.2)}
+@keyframes hb{0%,100%{transform:scale(1)}8%{transform:scale(1.06)}16%{transform:scale(1)}28%{transform:scale(1.04)}40%{transform:scale(1)}}
+.skin-btn{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:700;color:var(--muted);white-space:nowrap}
+.skin-btn:hover{color:var(--ink)}
+@media (max-width:640px){.skin-btn{order:2;margin-left:auto;padding:4px 10px;font-size:11.5px}.tabs{order:3}}
+/* stage HUD: target muscles & rep counter */
+.hud-tm{position:absolute;right:12px;top:12px;display:grid;gap:4px;justify-items:end;padding:8px 10px;border-radius:10px;background:rgba(3,8,12,.55);pointer-events:none;max-width:48%}
+.hud-tm .l{font-size:10.5px;font-weight:700;letter-spacing:.16em;color:#8FB3AC}
+.hud-tm .ms{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end}
+.hud-tm .ms span{font-size:11.5px;font-weight:700;padding:1px 7px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.hud-tm .ms span.p{color:var(--glowp,#2BFFB5);text-shadow:0 0 8px var(--glowp,#2BFFB5);box-shadow:0 0 10px color-mix(in srgb,var(--glowp,#2BFFB5) 35%,transparent)}
+.hud-tm .ms span.s{color:var(--glows,#9FB6C0);border-style:dashed;opacity:.85}
+.hud-rep{position:absolute;left:12px;bottom:10px;display:grid;grid-template-columns:auto auto;align-items:baseline;gap:0 6px;padding:8px 12px;border-radius:12px;background:rgba(3,8,12,.6);pointer-events:none;min-width:120px}
+.hud-rep .lbl{grid-column:1/-1;font-size:10.5px;font-weight:700;letter-spacing:.16em;color:#8FB3AC}
+.hud-rep b{font-family:var(--f-mono);font-size:26px;color:var(--glowp,#2BFFB5);text-shadow:0 0 12px var(--glowp,#2BFFB5);line-height:1.1}
+.hud-rep small{font-family:var(--f-mono);font-size:13px;color:#A9C2BC}
+.hud-rep .repbar{grid-column:1/-1;height:4px;border-radius:2px;background:rgba(255,255,255,.12);overflow:hidden;margin-top:5px}
+.hud-rep .repbar i{display:block;height:100%;width:0;background:var(--glowp,#2BFFB5);box-shadow:0 0 10px var(--glowp,#2BFFB5)}
+@media (max-width:520px){.hud-tm{display:none}.hud-rep{min-width:96px;padding:6px 10px}.hud-rep b{font-size:20px}}
+
 /* figure */
 .glow{opacity:.35;animation:glow 1.8s ease-in-out infinite}
 @keyframes glow{50%{opacity:.12}}
@@ -465,6 +522,7 @@ body.has-mini main{padding-bottom:96px}
       <button class="tab" role="tab" data-tab="share" aria-selected="false">함께하기</button>
       <button class="tab" role="tab" data-tab="refs" aria-selected="false">근거</button>
     </nav>
+    <button type="button" class="skin-btn" id="skinBtn" aria-label="테마 바꾸기">테마</button>
   </div>
 </header>
 
@@ -489,6 +547,19 @@ body.has-mini main{padding-bottom:96px}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 var GSEX=null;
+try{document.documentElement.dataset.skin=(JSON.parse(localStorage.getItem('fitpuzzle-v1')||'{}').skin)||'neon';}catch(e){document.documentElement.dataset.skin='neon';}
+const isNeon=()=>document.documentElement.dataset.skin==='neon';
+const GLOWC={chest:'#2FC8FF',lower:'#FF3D55',quadIso:'#FFD23F',back:'#3DFF7A',shoulder:'#B36BFF',core:'#FF8A3D'};
+function glowColor(e){const p=e.prim;
+  if(p.length===1&&p[0]==='quads')return GLOWC.quadIso;
+  if(p.some(m=>['chest','triceps'].includes(m))&&!p.includes('delts'))return GLOWC.chest;
+  if(p.includes('delts'))return GLOWC.shoulder;
+  if(p.some(m=>['lats','traps','arms','lowback'].includes(m))&&!p.some(m=>['glutes','quads'].includes(m)))return GLOWC.back;
+  if(p.some(m=>['quads','glutes','hams','calves'].includes(m)))return GLOWC.lower;
+  if(p.some(m=>['abs','obliques'].includes(m)))return GLOWC.core;
+  return '#2BFFB5';}
+function glowSec(e){const c=glowColor(e);return mixHex(c,'#ffffff',.5);}
+function mixHex(a,b,t){const pa=[1,3,5].map(i=>parseInt(a.slice(i,i+2),16)),pb=[1,3,5].map(i=>parseInt(b.slice(i,i+2),16));return '#'+pa.map((v,i)=>Math.round(v+(pb[i]-v)*t).toString(16).padStart(2,'0')).join('');}
 /* ================= LOGO ================= */
 function logoSVG(size,opts={}){
   const id='lg'+Math.random().toString(36).slice(2,7);
@@ -1186,12 +1257,18 @@ function Stage3D(thumb){
   renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
   renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;
   const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(30,4/3,.1,100);
-  scene.add(new THREE.HemisphereLight(0xffffff,0x3a4448,.7));
+  const hemi=new THREE.HemisphereLight(0xffffff,0x3a4448,.7);scene.add(hemi);
   const sun=new THREE.DirectionalLight(0xffffff,1.05);sun.position.set(2.5,6,4);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);
   Object.assign(sun.shadow.camera,{left:-4,right:4,top:4,bottom:-4});sun.shadow.radius=4;sun.shadow.bias=-.0006;scene.add(sun);
   const rim=new THREE.DirectionalLight(0xcfe9ff,.8);rim.position.set(-4,3.5,-3);scene.add(rim);
   const fillL=new THREE.DirectionalLight(0xffffff,.25);fillL.position.set(0,1,6);scene.add(fillL);
   const floor=new THREE.Mesh(new THREE.CircleGeometry(5,48),new THREE.ShadowMaterial({opacity:.45}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
+  const grid=new THREE.GridHelper(12,48,0x2bffb5,0x16405a);grid.material.transparent=true;grid.material.opacity=.32;grid.material.depthWrite=false;grid.position.y=.002;grid.visible=false;scene.add(grid);
+  const NP=240,spg=new THREE.BufferGeometry(),spp=new Float32Array(NP*3),spc=new Float32Array(NP*3),pal=[[.17,1,.71],[.24,.66,1],[.7,.42,1],[1,.82,.25]];
+  for(let i=0;i<NP;i++){spp[i*3]=(Math.random()-.5)*12;spp[i*3+1]=Math.random()*4.5;spp[i*3+2]=(Math.random()-.5)*10-1.5;spc.set(pal[i%4],i*3);}
+  spg.setAttribute('position',new THREE.BufferAttribute(spp,3));spg.setAttribute('color',new THREE.BufferAttribute(spc,3));
+  const stars=new THREE.Points(spg,new THREE.PointsMaterial({size:.03,vertexColors:true,transparent:true,opacity:.75,depthWrite:false,blending:THREE.AdditiveBlending}));stars.visible=false;scene.add(stars);
+  let NEONM=null;
   const disc=new THREE.Mesh(new THREE.CircleGeometry(2.3,64),new THREE.MeshBasicMaterial({color:0x888888,transparent:true,opacity:.14}));disc.rotation.x=-Math.PI/2;disc.position.y=.002;scene.add(disc);
   let fig=null,ex=null,view={az:38,el:12},target=new THREE.Vector3(),dist=6,parts={},chestMeshes=[],brace=null,mat={},particles=[],spawnAcc=0,lastT=0,B=BODY.n,sex='n';
   const sph=new THREE.SphereGeometry(1,28,20);
@@ -1222,11 +1299,12 @@ function Stage3D(thumb){
       muscle:std('#E4E8E9',{roughness:.5,bumpMap:fb,bumpScale:.016}),
       skin:null,top:std('#6F787C',{roughness:.85}),bottom:std('#6F787C',{roughness:.85}),
       shoe:std('#DCE0E2',{roughness:.6}),sole:std('#DCE0E2',{roughness:.6}),hair:std('#3A4043',{roughness:.95}),eye:std('#4A5256',{roughness:.3}),
-      p:std('#08B894',{toneMapped:false,emissive:lin('#06C9A4'),emissiveIntensity:.45,roughness:.4,bumpMap:fb,bumpScale:.012}),
-      s:std('#6FCDBB',{toneMapped:false,emissive:lin('#4CBFAA'),emissiveIntensity:.2,roughness:.45,bumpMap:fb,bumpScale:.012}),
+      p:std(glowColor(e),{toneMapped:false,emissive:lin(glowColor(e)),emissiveIntensity:.45,roughness:.4,bumpMap:fb,bumpScale:.012}),
+      s:std(glowSec(e),{toneMapped:false,emissive:lin(glowSec(e)),emissiveIntensity:.2,roughness:.45,bumpMap:fb,bumpScale:.012}),
       db:std('#2B3134',{roughness:.35,metalness:.6})};
     mat.skin=mat.light;
     disc.visible=false;
+    const NEON=isNeon();grid.visible=false;stars.visible=false;floor.visible=true;floor.material.opacity=NEON?.55:.45;scene.fog=null;renderer.toneMappingExposure=NEON?1.05:1.1;NEONM=null;hemi.intensity=NEON?.55:.7;rim.intensity=NEON?1.4:.8;rim.color.set(NEON?0xbfe6ff:0xcfe9ff);
     const C=B.cloth;
     // ---- torso (loft pieces with clothing split)
     const tf=frame();parts.torso={f:tf};
@@ -1263,11 +1341,11 @@ function Stage3D(thumb){
         [-6.5,6.5].forEach(z=>{const pl=new THREE.Mesh(new THREE.CylinderGeometry(4.6*SC,4.6*SC,3*SC,18),mat.db);pl.rotation.x=Math.PI/2;pl.position.z=z*SC;pl.castShadow=true;g.add(pl);});fig.add(g);parts['db'+q]=g;}
     });
     parts.props=[];
-    if(e.props){const pm={frame:std('#3B4348',{metalness:.55,roughness:.4}),pad:std('#1C2124',{roughness:.85}),plate:std('#5A6368',{metalness:.6,roughness:.35}),
+    if(e.props){const pm={frame:std('#3B4348',{metalness:.55,roughness:.4}),pad:Object.assign(std('#1C2124',{roughness:.85}),{name:'pad'}),plate:std('#5A6368',{metalness:.6,roughness:.35}),
         metal:std('#B4BCC0',{metalness:.85,roughness:.22}),cable:std('#C9D0D3',{roughness:.5}),deck:std('#23282B',{roughness:.9}),belt:std('#15191B',{roughness:1}),
         screen:std('#12B89C',{emissive:lin('#12B89C'),emissiveIntensity:.8,toneMapped:false})};
       const bg=new THREE.BoxGeometry(1,1,1),cg=new THREE.CylinderGeometry(1,1,1,18);
-      e.props(jointsOf(solve(norm(e.A)),norm(e.A).abd,norm(e.A).aab)).forEach(d=>{const m=new THREE.Mesh(d.t==='box'?bg:cg,pm[d.m]||pm.frame);m.castShadow=true;m.receiveShadow=true;fig.add(m);parts.props.push(m);});}
+      e.props(jointsOf(solve(norm(e.A)),norm(e.A).abd,norm(e.A).aab)).forEach(d=>{const m=new THREE.Mesh(d.t==='box'?bg:cg,pm[d.m]||pm.frame);m.userData.prop=true;m.castShadow=true;m.receiveShadow=true;fig.add(m);parts.props.push(m);});}
     if(e.floor){const m=new THREE.Mesh(new THREE.BoxGeometry(4.3,.03,1.25),std('#1C2322',{roughness:1}));m.position.set(0,.015,0);m.receiveShadow=true;fig.add(m);}
     // muscles
     const mf=sex==='f'?.86:sex==='n'?.93:1,wf=B.shZ/18;
@@ -1281,6 +1359,25 @@ function Stage3D(thumb){
     brace=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,true),64,.8*SC,6,true),new THREE.MeshBasicMaterial({color:new THREE.Color(BR.hold.c),transparent:true,opacity:0}));tf.add(brace);
     const pg=new THREE.SphereGeometry(1.5*SC,8,6);
     for(let i=0;i<34;i++){const m=new THREE.Mesh(pg,new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}));m.visible=false;fig.add(m);particles.push({m,life:0});}
+    if(NEON){const col=new THREE.Color(glowColor(e)),col2=new THREE.Color(glowSec(e));
+      const glass=new THREE.MeshStandardMaterial({color:0x5E666E,roughness:.55,metalness:.08,emissive:0x07090c,transparent:true,opacity:.58});
+      glass.onBeforeCompile=sh=>{sh.fragmentShader=sh.fragmentShader.replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\n float frz=pow(1.0-abs(dot(normalize(-vViewPosition),normal)),2.4);\n totalEmissiveRadiance+=vec3(0.55,0.66,0.78)*frz*0.55; diffuseColor.a=mix(diffuseColor.a,0.92,frz);');};
+      const glassM=glass.clone();glassM.color.set(0x6A737B);glassM.onBeforeCompile=glass.onBeforeCompile;
+      const equip=new THREE.MeshStandardMaterial({color:0x2A3036,metalness:.65,roughness:.32});
+      const equipPad=new THREE.MeshStandardMaterial({color:0x1A1E22,metalness:.1,roughness:.75});
+      const halo=(c,o,dt)=>new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:o,depthWrite:false,depthTest:dt,blending:THREE.AdditiveBlending,toneMapped:false});
+      NEONM={p:new THREE.MeshStandardMaterial({color:col.clone().multiplyScalar(.25),emissive:col,emissiveIntensity:.9,roughness:.35,toneMapped:false}),
+        s:new THREE.MeshStandardMaterial({color:col2.clone().multiplyScalar(.25),emissive:col2,emissiveIntensity:.35,roughness:.4,toneMapped:false}),
+        ph1:halo(col,.45,true),ph2:halo(col,.12,false),sh1:halo(col2,.18,true),sh2:halo(col2,.04,false)};
+      const list=[];fig.traverse(o=>{if(o.isMesh&&!particles.some(q=>q.m===o)&&o!==brace)list.push(o);});
+      list.forEach(o=>{
+        if(o.material===mat.p||o.material===mat.s){const pr=o.material===mat.p;o.material=pr?NEONM.p:NEONM.s;o.castShadow=false;
+          const h1=new THREE.Mesh(o.geometry,pr?NEONM.ph1:NEONM.sh1);h1.scale.setScalar(1.28);h1.renderOrder=5;o.add(h1);
+          const h2=new THREE.Mesh(o.geometry,pr?NEONM.ph2:NEONM.sh2);h2.scale.setScalar(1.9);h2.renderOrder=6;o.add(h2);}
+        else if(o.userData.prop||o.material===mat.db){o.material=o.material.name==='pad'||o.geometry.type==='BoxGeometry'&&!o.userData.metal?equipPad:equip;}
+        else if(o.material===mat.muscle)o.material=glassM;
+        else if(o.material===mat.hair||o.material===mat.eye){}
+        else o.material=glass;});}
     const box=new THREE.Box3();[norm(e.A),norm(e.B)].forEach(P=>{const s=solve(P);['hip','sh','head','kN','anN','kF','anF','wrN','wrF','toeN','toeF'].forEach(k=>box.expandByPoint(V(s[k],0)));});
     box.expandByPoint(new THREE.Vector3(box.min.x,0,0));
     box.getCenter(target);const size=box.getSize(new THREE.Vector3());
@@ -1326,6 +1423,13 @@ function Stage3D(thumb){
     brace.material.opacity=br==='hold'?.55+.3*Math.sin(time/120):0;
     const pulse=.3+.2*Math.sin(time/260);mat.p.emissiveIntensity=pulse*.8+.2;mat.s.emissiveIntensity=pulse*.4+.1;
     const dt=Math.min(50,time-lastT||16);lastT=time;
+    if(NEONM){let g;const b2=info?info.bp:0,br2=info?info.br:'free';
+      if(ex.brCycle)g=.55+.45*Math.abs(Math.sin(time/ex.brCycle*Math.PI*2));
+      else g=br2==='out'?.5+.5*b2:br2==='hold'?1:br2==='in'?1-.55*b2:br2==='short'?.75+.1*Math.sin(time/200):.42;
+      if(thumb)g=.9;
+      NEONM.p.emissiveIntensity=.4+.62*g;NEONM.ph1.opacity=.1+.3*g;NEONM.ph2.opacity=.03+.12*g;
+      NEONM.s.emissiveIntensity=.3+.35*g;NEONM.sh1.opacity=.06+.12*g;NEONM.sh2.opacity=.01+.03*g;}
+    if(view.auto&&!view.hold&&!thumb){view.swayT=(view.swayT||0)+dt;view.az=(view.base??view.az)+Math.sin(view.swayT/5200)*24;placeCam();}
     const mouth=head.clone().addScaledVector(face,9.5*SC).addScaledVector(hd,-4*SC);
     const emit=(br==='in'||br==='out'||br==='short')&&!REDUCED;
     spawnAcc+=dt;
@@ -1348,21 +1452,22 @@ let STAGE=null,TSTAGE=null;const THUMBS={};
 try{if(HAS3D){STAGE=Stage3D(false);}}catch(e){HAS3D=false;}
 
 function defView(ex){return ['바벨','스미스'].includes(ex.tool)?{az:26,el:24}:{az:38,el:12};}
-function attachStage(host,ex){
-  host.innerHTML='';host.classList.add('fig3d');
+function attachStage(host,ex,opts={}){
+  host.innerHTML='';host.classList.add('fig3d');STAGE.view.auto=!!opts.auto&&isNeon()&&!REDUCED;STAGE.view.swayT=0;
+  const gc=glowColor(ex);host.closest('.stage')&&(host.closest('.stage').style.setProperty('--glowp',gc),host.closest('.stage').style.setProperty('--glows',glowSec(ex)));host.style.setProperty('--glowc',gc+'55');
   const cv=STAGE.renderer.domElement;cv.className='cv3d';host.appendChild(cv);
-  {const v=defView(ex);STAGE.view.az=v.az;STAGE.view.el=v.el;}STAGE.build(ex,curSex());
+  {const v=defView(ex);STAGE.view.az=v.az;STAGE.view.el=v.el;STAGE.view.base=v.az;}STAGE.build(ex,curSex());
   const fit=()=>{const r=host.getBoundingClientRect();if(r.width>0)STAGE.size(Math.round(r.width),Math.round(r.height));};
   fit();if(window.ResizeObserver){const ro=new ResizeObserver(fit);ro.observe(host);}
   let drag=null;
-  cv.onpointerdown=e=>{drag={x:e.clientX,y:e.clientY,az:STAGE.view.az,el:STAGE.view.el};try{cv.setPointerCapture(e.pointerId);}catch(_){}host.classList.add('drag');};
+  cv.onpointerdown=e=>{STAGE.view.hold=true;drag={x:e.clientX,y:e.clientY,az:STAGE.view.az,el:STAGE.view.el};try{cv.setPointerCapture(e.pointerId);}catch(_){}host.classList.add('drag');};
   cv.onpointermove=e=>{if(!drag)return;STAGE.view.az=drag.az-(e.clientX-drag.x)*.45;STAGE.view.el=Math.max(-4,Math.min(65,drag.el+(e.clientY-drag.y)*.3));STAGE.placeCam();host.dispatchEvent(new CustomEvent('viewchange'));};
-  cv.onpointerup=cv.onpointercancel=()=>{drag=null;host.classList.remove('drag');};
+  cv.onpointerup=cv.onpointercancel=()=>{drag=null;STAGE.view.hold=false;STAGE.view.base=STAGE.view.az;STAGE.view.swayT=0;host.classList.remove('drag');};
   return {draw:(k,info,t)=>STAGE.draw(k,info,t)};
 }
-function makePlayer(host,ex,refs={}){
+function makePlayer(host,ex,refs={},opts={}){
   if(typeof refs==='object'&&refs.nodeType)refs={ph:refs};
-  const fig=HAS3D?attachStage(host,ex):createFigure(host,ex);
+  const fig=HAS3D?attachStage(host,ex,opts):createFigure(host,ex);
   const p={fig,ex,t:0,speed:1,paused:false,refs,last:null,host,alive:()=>host.isConnected,lastBr:null};
   players.add(p);return p;
 }
@@ -1380,24 +1485,28 @@ function tick(now){
     if(r.brT&&p.lastBr!==tl.br){p.lastBr=tl.br;const b=BR[tl.br];r.brT.textContent=b.t;r.brS.textContent=b.s;r.brBox.style.setProperty('--br',b.c);r.brBox.dataset.br=tl.br;}
     if(r.brBox){const sc=tl.br==='in'?.55+.45*tl.bp:tl.br==='out'?1-.45*tl.bp:tl.br==='hold'?1:.75;r.brBox.style.setProperty('--ring',sc.toFixed(3));}
     if(r.head)r.head.style.left=(tl.cyc*100).toFixed(2)+'%';
+    if(r.rep&&p.repTarget){const tm=p.ex.tm,tot=tm[0]+tm[1]+tm[2]+tm[3],cyc=Math.floor(p.t/tot),n=p.repTarget,cur=cyc%n;
+      const txt=String(cur+1);if(r.rep.textContent!==txt)r.rep.textContent=txt;if(r.repT.textContent!==String(n))r.repT.textContent=n;r.repBar.style.width=(((cur+(p.t%tot)/tot)/n)*100).toFixed(1)+'%';}
   }
   requestAnimationFrame(tick);
 }
 requestAnimationFrame(tick);
 function thumbSVG(host,ex){
   if(HAS3D){try{
-    const key=ex.id+curSex()+(document.documentElement.dataset.theme||'')+(matchMedia('(prefers-color-scheme: dark)').matches?'d':'l');
+    const key=ex.id+curSex()+(document.documentElement.dataset.skin||'')+(document.documentElement.dataset.theme||'')+(matchMedia('(prefers-color-scheme: dark)').matches?'d':'l');
     if(!THUMBS[key]){if(!TSTAGE){TSTAGE=Stage3D(true);TSTAGE.size(208,160);}{const v=defView(ex);TSTAGE.view.az=v.az+2;TSTAGE.view.el=v.el-2;}TSTAGE.build(ex);
       const t=timeline(ex,ex.kind==='interval'?0:ex.tm[0]+10);TSTAGE.draw(t.k,{br:'free',bp:0},0);THUMBS[key]=TSTAGE.renderer.domElement.toDataURL('image/png');}
     host.innerHTML=`<img src="${THUMBS[key]}" alt="" style="width:100%;height:100%;object-fit:cover;display:block">`;return;}catch(e){}}
   createFigure(host,ex,{thumb:true,static:ex.kind==='interval'?0:1});
 }
-function stageHTML(id){
+function stageHTML(id,ex){
   return `<div class="fig" id="${id}Fig"></div>
     <div class="hud" id="${id}Br" data-br="free"><span class="ring"><i></i></span><span class="brtxt"><b id="${id}BrT"></b><small id="${id}BrS"></small></span></div>
-    ${HAS3D?`<div class="hud-r"><span><i style="background:var(--mp)"></i>주동근</span><span><i style="background:var(--ms)"></i>보조근</span></div><div class="hud-hint">드래그해서 돌려보기</div>`:''}`;
+    ${ex?`<div class="hud-tm"><span class="l">TARGET MUSCLES</span><div class="ms">${ex.prim.map(m=>`<span class="p">${MUS[m]}</span>`).join('')}${ex.sec.slice(0,2).map(m=>`<span class="s">${MUS[m]}</span>`).join('')}</div></div>`:''}
+    ${ex&&ex.kind==='reps'?`<div class="hud-rep"><span class="lbl">${id==='ses'?'TEMPO REP':'REP'}</span><b id="${id}Rep">1</b><small>/ <i id="${id}RepT" style="font-style:normal">12</i></small><div class="repbar"><i id="${id}RepBar"></i></div></div>`:''}
+    ${HAS3D?`<div class="hud-hint">드래그해서 돌려보기</div>`:''}`;
 }
-function stageRefs(id){return {ph:$('#'+id+'Ph'),brT:$('#'+id+'BrT'),brS:$('#'+id+'BrS'),brBox:$('#'+id+'Br'),head:$('#'+id+'Head')};}
+function stageRefs(id){return {ph:$('#'+id+'Ph'),brT:$('#'+id+'BrT'),brS:$('#'+id+'BrS'),brBox:$('#'+id+'Br'),head:$('#'+id+'Head'),rep:$('#'+id+'Rep'),repT:$('#'+id+'RepT'),repBar:$('#'+id+'RepBar')};}
 function stripHTML(id,ex){return `<div class="brline"><div class="brsegs">${breathStrip(ex)}<span class="brhead" id="${id}Head"></span></div></div>`;}
 
 /* ================= MUSCLE MAP ================= */
@@ -1795,7 +1904,7 @@ function renderSession(){
   <div class="progress"><i style="width:${doneSets/totalSets*100}%"></i></div>
   <div class="session">
     <div class="stage">
-      <div class="figwrap">${stageHTML('ses')}</div>
+      <div class="figwrap">${stageHTML('ses',ex)}</div>
       ${stripHTML('ses',ex)}
       <div class="stagebar"><span class="phase"><span class="dot"></span><span id="sesPh"></span></span><span class="muted" style="font-size:13px">${esc(ex.tempo)}</span></div>
     </div>
@@ -1811,6 +1920,7 @@ function renderSession(){
     </div>
   </div>`;
   const pl=makePlayer($('#sesFig'),ex,stageRefs('ses'));
+  if(it.unit==='reps')pl.repTarget=(SES.curI===i&&SES.cur?SES.cur.reps:parseInt(it.dose,10));
   $('#howBtn').onclick=()=>openHow(ex);
   $('#quitSes').onclick=()=>{stopAll();SES=null;clearSes();keepAwake(false);updateMini();renderToday();};
   $('#addSet').onclick=()=>{it.sets=Math.min(10,it.sets+1);toast(`${ex.name} 오늘 ${it.sets}세트로 늘렸어요`);renderSession();};
@@ -2103,18 +2213,18 @@ function renderDetail(){
   host.innerHTML=`<div class="detail">
    <div style="display:grid;gap:16px;align-content:start" class="gsticky">
      <div class="stage">
-       <div class="figwrap">${stageHTML('g')}</div>
+       <div class="figwrap">${stageHTML('g',ex)}</div>
        ${stripHTML('g',ex)}
-       ${HAS3D?`<div class="stagebar viewbar" style="border-top:0;padding-top:0"><span class="muted" style="font-size:12.5px;font-weight:600">모형</span><div class="seg" role="group" aria-label="모형">${[['f','여성'],['m','남성']].map(([k,n])=>`<button data-sex="${k}" aria-pressed="${(curSex()==='m'?'m':'f')===k}">${n}</button>`).join('')}</div><span class="muted" style="font-size:12.5px;font-weight:600">시점</span><div class="seg" role="group" aria-label="시점">${[['측면',0],['사선',38],['정면',90],['후면',-90]].map(([n,a])=>`<button data-az="${a}" aria-pressed="${a===38}">${n}</button>`).join('')}</div></div>`:''}
+       ${HAS3D?`<div class="stagebar viewbar" style="border-top:0;padding-top:0"><span class="muted" style="font-size:12.5px;font-weight:600">모형</span><div class="seg" role="group" aria-label="모형">${[['f','여성'],['m','남성']].map(([k,n])=>`<button data-sex="${k}" aria-pressed="${(curSex()==='m'?'m':'f')===k}">${n}</button>`).join('')}</div><button type="button" class="btn sm ghost" id="gRot" aria-pressed="false">카메라 이동</button><span class="muted" style="font-size:12.5px;font-weight:600">시점</span><div class="seg" role="group" aria-label="시점">${[['측면',0],['사선',38],['정면',90],['후면',-90]].map(([n,a])=>`<button data-az="${a}" aria-pressed="${a===38}">${n}</button>`).join('')}</div></div>`:''}
        <div class="stagebar"><span class="phase"><span class="dot"></span><span id="gPh"></span></span><span class="sp"></span>
          <div class="seg" role="group" aria-label="재생 속도"><button data-sp="0.5" aria-pressed="false">0.5×</button><button data-sp="1" aria-pressed="true">1×</button></div>
          <button class="btn sm" id="gPause" aria-pressed="false">일시정지</button></div>
-       <div class="mmap">${muscleMap(ex.prim,ex.sec)}<div class="legend"><span><i style="background:var(--mp)"></i>주동근</span><span><i style="background:var(--ms)"></i>보조근</span></div></div>
+       <div class="mmap" style="--mp:${glowColor(ex)};--ms:${glowSec(ex)}">${muscleMap(ex.prim,ex.sec)}<div class="legend"><span><i style="background:var(--mp)"></i>주동근 (진하게)</span><span><i style="background:var(--ms)"></i>보조근 (연하게)</span></div></div>
      </div>
    </div>
    <div style="display:grid;gap:22px;align-content:start">
      <div class="dhead"><div class="eyebrow">${ex.cat}${ex.equip?' · '+ex.equip:' · 맨몸'}</div><h2>${ex.name}</h2><div class="en">${ex.en}</div>
-       <div class="tags">${ex.prim.map(m=>`<span class="chip p">${MUS[m]}</span>`).join('')}${ex.sec.map(m=>`<span class="chip s">${MUS[m]}</span>`).join('')}</div>
+       <div class="tags" style="--mp:${glowColor(ex)};--ms:${glowSec(ex)}">${ex.prim.map(m=>`<span class="chip p">주동 · ${MUS[m]}</span>`).join('')}${ex.sec.map(m=>`<span class="chip s">보조 · ${MUS[m]}</span>`).join('')}</div>
        <div class="prefrow">${prefSeg(ex.id)}</div></div>
      <div class="keycard"><div class="kc-h">${PULSE()}<b>이것만 기억하세요</b><span class="muted">핵심 포인트 3</span></div>
        <ol class="kc-list">${ex.key.map(k=>`<li>${PULSE('var(--accent)',18)}<span>${esc(k)}</span></li>`).join('')}</ol></div>
@@ -2133,9 +2243,11 @@ function renderDetail(){
        <div class="acc-b"><div class="evid">${esc(ex.ev)}<div style="margin-top:8px;font-size:13px">${ex.refs.map(r=>`<a href="${REFS[r].u}" target="_blank" rel="noopener">${esc(REFS[r].t.split(' (')[0])} (${REFS[r].t.match(/\((\d{4})\)/)[1]})</a>`).join(' · ')}</div></div></div></details>
      <div class="note safety">${PULSE('var(--warn)',18)} <span><b>안전 체크</b> ${esc(ex.safety)}</span></div></div>
    </div></div>`;
-  const pl=makePlayer($('#gFig'),ex,stageRefs('g'));
-  $$('[data-az]',host).forEach(b=>b.onclick=()=>{STAGE.view.az=+b.dataset.az;STAGE.view.el=b.dataset.az==='0'?6:12;STAGE.placeCam();$$('[data-az]',host).forEach(x=>x.setAttribute('aria-pressed',x===b));});
+  const pl=makePlayer($('#gFig'),ex,stageRefs('g'),{auto:true});
+  if(ex.kind==='reps'){const pit=plan().items.find(x=>x.ex.id===ex.id);pl.repTarget=pit?parseInt(pit.dose,10):12;}
+  $$('[data-az]',host).forEach(b=>b.onclick=()=>{STAGE.view.az=+b.dataset.az;STAGE.view.base=+b.dataset.az;STAGE.view.swayT=0;STAGE.view.el=b.dataset.az==='0'?6:12;STAGE.placeCam();$$('[data-az]',host).forEach(x=>x.setAttribute('aria-pressed',x===b));});
   $$('[data-sex]',host).forEach(b=>b.onclick=()=>{GSEX=b.dataset.sex;const az=STAGE.view.az,el=STAGE.view.el;STAGE.build(ex,GSEX);STAGE.view.az=az;STAGE.view.el=el;STAGE.placeCam();$$('[data-sex]',host).forEach(x=>x.setAttribute('aria-pressed',x===b));});
+  if($('#gRot')){const upd=()=>{$('#gRot').setAttribute('aria-pressed',!!STAGE.view.auto);$('#gRot').textContent=STAGE.view.auto?'카메라 이동 켜짐':'카메라 이동';};upd();$('#gRot').onclick=()=>{STAGE.view.auto=!STAGE.view.auto;upd();};}
   $('#gFig').addEventListener('viewchange',()=>$$('[data-az]',host).forEach(x=>x.setAttribute('aria-pressed','false')));
   $$('[data-sp]',host).forEach(b=>b.onclick=()=>{pl.speed=+b.dataset.sp;$$('[data-sp]',host).forEach(x=>x.setAttribute('aria-pressed',x===b));});
   $('#gPause').onclick=e=>{pl.paused=!pl.paused;e.target.textContent=pl.paused?'재생':'일시정지';e.target.setAttribute('aria-pressed',pl.paused);};
@@ -2329,6 +2441,9 @@ document.addEventListener('click',e=>{
   const gd=e.target.closest('[data-guide]');if(gd){G.id=gd.dataset.guide;G.cat='전체';go('guide');}
 });
 $('#miniBack').onclick=()=>go('today');
+function paintSkinBtn(){const b=$('#skinBtn');if(b)b.textContent=isNeon()?'라이트 테마':'다크 테마';}
+paintSkinBtn();
+$('#skinBtn').onclick=()=>{const n=isNeon()?'classic':'neon';document.documentElement.dataset.skin=n;S.skin=n;save();for(const k in THUMBS)delete THUMBS[k];paintSkinBtn();go(CUR,{keepScroll:true});};
 $('#howBg').onclick=closeHow;$('#howClose').onclick=closeHow;
 $('#howFull').onclick=()=>{if(HOW_EX){G.id=HOW_EX.id;G.cat='전체';}closeHow();go('guide');};
 function setHdr(){const t=document.querySelector('.top');if(t)document.documentElement.style.setProperty('--hdr',t.offsetHeight+'px');}
