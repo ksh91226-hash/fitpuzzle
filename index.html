@@ -192,6 +192,26 @@ strong.kp{font-weight:700;color:var(--ink);background:linear-gradient(transparen
 .areah{font-size:13px;font-weight:700;color:var(--accent);display:flex;align-items:center;gap:6px;margin-top:6px}
 .gtag{font-style:normal;font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:5px;padding:0 5px;margin-right:5px}
 .steps li>span{min-width:0}
+.minibar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:45;display:flex;align-items:center;gap:10px;
+  width:min(560px,calc(100% - 24px));padding:10px 10px 10px 14px;border-radius:14px;background:var(--ink);color:var(--bg);box-shadow:0 10px 30px rgba(0,0,0,.25);font-size:14px;font-weight:600}
+.minibar #miniTxt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-variant-numeric:tabular-nums}
+.minibar .dot{width:9px;height:9px;border-radius:50%;background:var(--mp);flex:none;animation:glow 1.4s ease-in-out infinite}
+.minibar.hot{background:var(--m1);color:#fff}
+.tab.live::after{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--mp);margin-left:5px;vertical-align:2px}
+.sheet-bg{position:fixed;inset:0;background:rgba(10,16,14,.45);z-index:55}
+.sheet{position:fixed;left:50%;bottom:0;transform:translate(-50%,100%);transition:transform .22s ease;z-index:60;width:min(760px,100%);max-height:86vh;overflow:auto;
+  background:var(--bg);border-radius:20px 20px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.3);padding:0 16px calc(24px + env(safe-area-inset-bottom,0px))}
+.sheet.open{transform:translate(-50%,0)}
+.sh-head{position:sticky;top:0;z-index:2;display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;padding:14px 0 10px;background:var(--bg);border-bottom:1px solid var(--line)}
+.sh-head::before{content:"";position:absolute;top:6px;left:50%;width:40px;height:4px;border-radius:2px;background:var(--line);transform:translateX(-50%)}
+.sh-status{font-size:13px;font-weight:600;color:var(--accent);margin-top:2px;font-variant-numeric:tabular-nums}
+.sh-actions{display:flex;gap:6px;flex-wrap:wrap}
+.sh-body{display:grid;gap:16px;padding-top:14px}
+body.sheet-open{overflow:hidden}
+body.has-mini main{padding-bottom:96px}
+.keycard.compact{padding:12px 14px}.keycard.compact .kc-list li{font-size:14px}
+.banner.resume{background:color-mix(in srgb,var(--mp) 18%,var(--surface))}
+@media (prefers-reduced-motion: reduce){.sheet{transition:none}}
 /* session */
 .session{display:grid;grid-template-columns:1.1fr 1fr;gap:20px;align-items:start}
 @media (max-width:860px){.session{grid-template-columns:1fr}}
@@ -452,6 +472,13 @@ strong.kp{font-weight:700;color:var(--ink);background:linear-gradient(transparen
   <section id="p-refs" role="tabpanel" hidden></section>
 </main>
 <footer class="wrap" style="padding-block:0 40px;font-size:12.5px;color:var(--muted)">기록은 지금 쓰는 기기의 브라우저에 저장돼요. 브라우저 데이터를 지우거나 다른 기기에서 열면 새로 시작해요. 핏퍼즐은 일반적인 운동 정보를 제공하며 의학적 진단을 대신하지 않아요.</footer>
+<div class="minibar" id="miniBar" hidden role="status"><span class="dot"></span><span id="miniTxt"></span><button type="button" class="btn sm primary" id="miniBack">운동으로 돌아가기</button></div>
+<div class="sheet-bg" id="howBg" hidden></div>
+<section class="sheet" id="howSheet" hidden role="dialog" aria-modal="true" aria-label="운동법">
+  <div class="sh-head"><div><div class="eyebrow">운동법 · 운동은 계속 진행 중이에요</div><h2 class="sh-title h-sec"></h2><div class="sh-status" id="sheetStatus"></div></div>
+    <div class="sh-actions"><button type="button" class="btn sm ghost" id="howFull">전체 가이드</button><button type="button" class="btn sm" id="howClose">닫고 운동하기</button></div></div>
+  <div class="sh-body"></div>
+</section>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -1541,8 +1568,8 @@ function renderToday(){
   const P=plan(),done=S.sessions.length,tot=total(),b=bmiOf(S.prof),goal=GOALS.find(g=>g.id===S.prof.goal);
   const line=LINES[Math.floor(Date.now()/dayMs)%LINES.length];
   const didToday=S.sessions.some(s=>s.d===todayStr());
-  const el=$('#p-today');
-  el.innerHTML=`${sampleBanner()}
+  const el=$('#p-today');const sv=S.sesSave&&S.sesSave.d===todayStr()?S.sesSave:null;
+  el.innerHTML=`${sv?`<div class="banner resume"><b>진행 중이던 운동이 있어요</b><span>${esc((EXM[sv.ids[sv.i]]||{}).name||'')} ${sv.set}세트부터 이어서 할 수 있어요.</span><span class="sp"></span><button class="btn sm primary" id="resumeBtn">이어서 하기</button><button class="btn sm ghost" id="dropSes">처음부터</button></div>`:''}${sampleBanner()}
   <div class="hero">
     <div class="card hello">
       <div class="eyebrow">${new Date().toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'long'})}</div>
@@ -1595,6 +1622,7 @@ function renderToday(){
   </div>`;
   $$('[data-thumb]',el).forEach(h=>thumbSVG(h,EXM[h.dataset.thumb]));
   $('#startBtn').onclick=()=>startSession();
+  if($('#resumeBtn')){$('#resumeBtn').onclick=()=>startSession(true);$('#dropSes').onclick=()=>{clearSes();renderToday();};}
   $('#quickLog').onclick=()=>showFeedback();
   $('#editBtn').onclick=()=>{EDIT=!EDIT;renderToday();};
   $$('[data-place]',el).forEach(b=>b.onclick=()=>{S.todayPlace=b.dataset.place;save();toast(b.dataset.place==='gym'?'헬스장 루틴으로 바꿨어요':'집 · 공원 루틴으로 바꿨어요');renderToday();});
@@ -1641,20 +1669,27 @@ document.addEventListener('visibilitychange',()=>{if(document.visibilityState===
 function countdown(sec,onTick,onDone){
   const end=Date.now()+sec*1000;let last=sec;
   SES.timer=setInterval(()=>{const left=Math.max(0,Math.ceil((end-Date.now())/1000));
-    if(left!==last){last=left;onTick(left);cue(left);}
+    if(left!==last){last=left;onTick(left);cue(left);updateMini();}
     if(left<=0){stopTimer();onDone();}},150);
 }
 function paintCount(left,label,mmss){const c=$('#cd');if(!c)return;c.innerHTML=mmss?fmt(left):`${left}<small>초</small>`;c.classList.toggle('hot',left<=5&&left>0);
   const n=$('#cdNote');if(n&&label)n.textContent=left<=5&&left>0?label:n.dataset.base;}
-function startSession(){
+function saveSes(){if(!SES)return;S.sesSave={d:todayStr(),i:SES.i,set:SES.set,log:SES.log||{},sets:SES.P.items.map(x=>x.sets),ids:SES.P.items.map(x=>x.ex.id)};save();}
+function clearSes(){delete S.sesSave;save();}
+function startSession(resume){
   unlockAudio();keepAwake(true);
   const P=plan();SES={P,i:0,set:1,resting:false,timer:null};
+  const sv=S.sesSave;
+  if(resume&&sv&&sv.d===todayStr()&&sv.ids.join()===P.items.map(x=>x.ex.id).join()){SES.i=Math.min(sv.i,P.items.length-1);SES.set=sv.set;SES.log=sv.log||{};sv.sets.forEach((n,k)=>{if(P.items[k])P.items[k].sets=n;});toast('이어서 시작할게요');}
   renderSession();window.scrollTo({top:0,behavior:'smooth'});
 }
 function stopTimer(){if(SES&&SES.timer){clearInterval(SES.timer);SES.timer=null;}}
 function stopAll(){stopTimer();if(SES&&SES.clock){clearInterval(SES.clock);SES.clock=null;}try{speechSynthesis.cancel();}catch(e){}}
 function renderSession(){
-  stopTimer();if(SES.clock){clearInterval(SES.clock);SES.clock=null;}
+  if(!SES)return;
+  saveSes();
+  if(CUR!=='today'){updateMini();return;}
+  if(!SES.resting&&!SES.holdEnd)stopTimer();if(SES.clock){clearInterval(SES.clock);SES.clock=null;}
   const {P,i,set}=SES,it=P.items[i],ex=it.ex;
   const totalSets=P.items.reduce((a,x)=>a+x.sets,0),doneSets=P.items.slice(0,i).reduce((a,x)=>a+x.sets,0)+set-1;
   const isLastSet=!SES.resting&&set===it.sets,isLastAll=isLastSet&&i===P.items.length-1;
@@ -1675,25 +1710,28 @@ function renderSession(){
       <div class="setdots" style="margin-top:10px">${Array.from({length:it.sets},(_,k)=>`<i class="${k<set-1?'on':k===set-1?'cur':''}"></i>`).join('')}</div>
       <button type="button" class="ob-skip" id="addSet" style="margin-top:6px">+ 이 운동 한 세트 더 (오늘만)</button></div>
       <div id="sesBody"></div>
+      <div class="keycard compact"><div class="kc-h">${PULSE()}<b>이것만 기억하세요</b><button type="button" class="btn sm" id="howBtn" style="margin-left:auto">운동법 자세히 보기</button></div>
+        <ol class="kc-list">${ex.key.map(k=>`<li>${PULSE('var(--accent)',16)}<span>${esc(k)}</span></li>`).join('')}</ol></div>
       <div class="cue"><b>트레이너 한마디</b>${esc(ex.cues[(set-1)%ex.cues.length][0])} — ${esc(ex.cues[(set-1)%ex.cues.length][1])}</div>
       <p class="muted" style="font-size:13px">호흡: ${esc(ex.breath)}</p>
     </div>
   </div>`;
   const pl=makePlayer($('#sesFig'),ex,stageRefs('ses'));
-  $('#quitSes').onclick=()=>{stopAll();SES=null;keepAwake(false);renderToday();};
+  $('#howBtn').onclick=()=>openHow(ex);
+  $('#quitSes').onclick=()=>{stopAll();SES=null;clearSes();keepAwake(false);updateMini();renderToday();};
   $('#addSet').onclick=()=>{it.sets=Math.min(10,it.sets+1);toast(`${ex.name} 오늘 ${it.sets}세트로 늘렸어요`);renderSession();};
   const cs=cueSet();
   $$('[data-cue]').forEach(b=>b.onclick=()=>{const k=b.dataset.cue;cs[k]=!cs[k];save();b.setAttribute('aria-pressed',cs[k]);if(k==='sound'&&cs[k]){unlockAudio();beep(880,.12,.24);}if(k==='vib'&&cs[k])vib(80);if(k==='voice'&&cs[k])say('음성 안내를 켰어요');});
   if($('#cueTest'))$('#cueTest').onclick=()=>{unlockAudio();cue(5);setTimeout(()=>cue(0),900);};
   const body=$('#sesBody');
   if(SES.resting){
-    let left=SES.restSec;
+    let left=Math.max(0,Math.ceil(((SES.restEnd||Date.now())-Date.now())/1000));
     const nIt=set<it.sets?it:P.items[i+1],nSet=set<it.sets?set+1:1,nLast=nSet===nIt.sets;
     body.innerHTML=`<div class="eyebrow">휴식</div><div class="counter mono" id="cd">${left}<small>초</small></div><p class="muted" id="cdNote" data-base="다음: ${esc(SES.nextLabel)}" style="font-size:14px;margin-top:6px">다음: ${esc(SES.nextLabel)}</p>
     <div class="nextprev" style="margin-top:10px"><div class="thumb" id="npThumb"></div><div><b>${nIt.ex.name} · ${nSet}/${nIt.sets}${nIt.unit==='round'?'라운드':'세트'}</b><span>${esc(nIt.dose)}${nLast?' · <b style="display:inline;color:var(--m1)">마지막 세트</b>':''}</span></div></div><p class="muted" style="font-size:12.5px;margin-top:4px">끝나기 5초 전부터 ${cueSet().sound?'소리':''}${cueSet().sound&&CAN_VIB&&cueSet().vib?'와 ':''}${CAN_VIB&&cueSet().vib?'진동':''}${!cueSet().sound&&!(CAN_VIB&&cueSet().vib)?'화면 표시':''}으로 알려줘요</p><div style="margin-top:12px"><button class="btn" id="skip">휴식 건너뛰기</button></div>`;
     pl.paused=true;thumbSVG($('#npThumb'),nIt.ex);
     SES.remFloor=remainingSec(0);startClock(remainingSec(left));
-    countdown(left,l=>{paintCount(l,`${l}초 후 시작 · ${SES.nextLabel} 준비 자세 잡기`);if(l===5)say(`5초 뒤 ${nIt.ex.name}${nLast?', 마지막 세트':''}`);},advanceAfterRest);
+    if(left<=5&&left>0)paintCount(left,`${left}초 후 시작 · ${SES.nextLabel} 준비 자세 잡기`);
     $('#skip').onclick=advanceAfterRest;
     return;
   }
@@ -1716,31 +1754,63 @@ function renderSession(){
     $('#setDone').onclick=()=>{SES.log[i].push({kg:c.kg,reps:c.reps});if(it.kg&&c.kg){S.wlog[ex.id]=c.kg;save();}finishSet();};
   }else{
     const sec=it.sec||parseInt(it.dose,10);
-    body.innerHTML=`<div class="eyebrow">${it.unit==='steady'?esc(it.variant):(it.unit==='round'?'라운드':'세트')+' '+set+' / '+it.sets}</div><div class="counter mono" id="cd">${it.unit==='steady'?fmt(sec):sec+'<small>초</small>'}</div><div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary lg" id="go">타이머 시작</button><button class="btn" id="setDone">완료</button></div>`;
+    const holdLeft=SES.holdEnd?Math.max(0,Math.ceil((SES.holdEnd-Date.now())/1000)):null;
+    body.innerHTML=`<div class="eyebrow">${it.unit==='steady'?esc(it.variant):(it.unit==='round'?'라운드':'세트')+' '+set+' / '+it.sets}</div><div class="counter mono" id="cd">${it.unit==='steady'?fmt(holdLeft??sec):(holdLeft??sec)+'<small>초</small>'}</div><div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary lg" id="go">타이머 시작</button><button class="btn" id="setDone">완료</button></div>`;
     $('#go').onclick=()=>{unlockAudio();$('#go').disabled=true;const c=$('#cd');let pre=3;
       c.innerHTML=`<span class="pre">3</span>`;beep(700,.1,.22);say('셋');
       SES.timer=setInterval(()=>{pre--;if(pre>0){c.innerHTML=`<span class="pre">${pre}</span>`;beep(700,.1,.22);say(pre===2?'둘':'하나');}
-        else{stopTimer();beep(1175,.2,.28);vib(120);say('시작');c.innerHTML=it.unit==='steady'?fmt(sec):`${sec}<small>초</small>`;countdown(sec,l=>paintCount(l,null,it.unit==='steady'),finishSet);}},1000);};
-    $('#setDone').onclick=finishSet;
+        else{stopTimer();beep(1175,.2,.28);vib(120);say('시작');c.innerHTML=it.unit==='steady'?fmt(sec):`${sec}<small>초</small>`;SES.holdEnd=Date.now()+sec*1000;countdown(sec,l=>{paintCount(l,null,it.unit==='steady');updateMini();},()=>{SES.holdEnd=null;finishSet();});}},1000);};
+    if(holdLeft!==null){$('#go').disabled=true;$('#go').textContent='진행 중';}
+    $('#setDone').onclick=()=>{SES.holdEnd=null;finishSet();};
   }
 }
 function finishSet(){
   stopTimer();if(SES.clock){clearInterval(SES.clock);SES.clock=null;}
   const it=SES.P.items[SES.i];
   const last=SES.i===SES.P.items.length-1&&SES.set===it.sets;
-  if(last){stopAll();SES=null;keepAwake(false);say('오늘 운동 끝! 수고했어요');showFeedback(true);return;}
+  if(last){stopAll();SES=null;clearSes();keepAwake(false);updateMini();say('오늘 운동 끝! 수고했어요');if(CUR!=='today')go('today');showFeedback(true);return;}
   let restSec=SES.P.restSec;
   if(it.unit==='round')restSec=Math.max(15,45-SES.P.L*5);
   const nextIt=SES.set<it.sets?it:SES.P.items[SES.i+1];
   SES.nextLabel=SES.set<it.sets?`${it.ex.name} ${SES.set+1}세트`:nextIt.ex.name;
-  SES.resting=true;SES.restSec=restSec;renderSession();
-}
-function advanceAfterRest(){
-  stopTimer();const it=SES.P.items[SES.i];SES.resting=false;
-  if(SES.set<it.sets)SES.set++;else{SES.i++;SES.set=1;}
+  const nIt=nextIt,nSet=SES.set<it.sets?SES.set+1:1,nLast=nSet===nIt.sets;
+  SES.resting=true;SES.restSec=restSec;SES.restEnd=Date.now()+restSec*1000;
+  countdown(restSec,l=>{paintCount(l,`${l}초 후 시작 · ${SES.nextLabel} 준비 자세 잡기`);updateMini();if(l===5)say(`5초 뒤 ${nIt.ex.name}${nLast?', 마지막 세트':''}`);},advanceAfterRest);
   renderSession();
 }
+function advanceAfterRest(){
+  stopTimer();if(!SES)return;const it=SES.P.items[SES.i];SES.resting=false;SES.restEnd=null;
+  if(SES.set<it.sets)SES.set++;else{SES.i++;SES.set=1;}
+  renderSession();updateMini();
+}
 
+/* ===== 운동 중 미니바 & 운동법 시트 ===== */
+function sesStatus(){if(!SES)return '';const it=SES.P.items[SES.i],ex=it.ex;
+  const rl=SES.resting&&SES.restEnd?Math.max(0,Math.ceil((SES.restEnd-Date.now())/1000)):null,hl=SES.holdEnd?Math.max(0,Math.ceil((SES.holdEnd-Date.now())/1000)):null;
+  return `${ex.name} · ${SES.set}/${it.sets}${it.unit==='round'?'라운드':'세트'}${rl!==null?` · 휴식 ${rl}초`:hl!==null?` · 타이머 ${it.unit==='steady'?fmt(hl):hl+'초'}`:' · 진행 중'}`;}
+function updateMini(){const bar=$('#miniBar');const live=!!SES;
+  $$('.tab[data-tab="today"]').forEach(t=>t.classList.toggle('live',live));
+  const st=$('#sheetStatus');if(st)st.textContent=live?sesStatus():'';
+  if(!bar)return;const show=live&&CUR!=='today';document.body.classList.toggle('has-mini',show);if(!show){bar.hidden=true;return;}
+  bar.hidden=false;$('#miniTxt').textContent=sesStatus();
+  const rl=SES.resting&&SES.restEnd?Math.ceil((SES.restEnd-Date.now())/1000):99;bar.classList.toggle('hot',rl<=5);}
+function howHTML(ex){const L=level(),n=i=>`<span class="num">${String(i).padStart(2,'0')}</span>`,w=weightFor(ex.id,L,S.prof.sex,S.prof.goal);
+  return `<div class="keycard"><div class="kc-h">${PULSE()}<b>이것만 기억하세요</b></div><ol class="kc-list">${ex.key.map(k=>`<li>${PULSE('var(--accent)',18)}<span>${esc(k)}</span></li>`).join('')}</ol></div>
+   <div class="tempo"><span><b>템포</b> ${esc(ex.tempo)}</span><span><b>호흡</b> ${esc(ex.breath)}</span></div>
+   <div class="gsec"><h3>${n(1)} 동작 순서</h3><ol class="steps">${ex.steps.map(t=>`<li><span>${hlText(t,ex.hl)}</span></li>`).join('')}</ol></div>
+   <details class="acc"><summary>${PULSE()}<span class="t">${n(2)} 준비 자세</span><span class="sub">${esc(ex.setup[0])}</span></summary><div class="acc-b"><ol class="steps">${ex.setup.map(t=>`<li><span>${hlText(t,ex.hl)}</span></li>`).join('')}</ol></div></details>
+   <details class="acc" open><summary>${PULSE('var(--m1)')}<span class="t">${n(3)} 흔한 실수와 고치는 법</span><span class="sub">${ex.mistakes.map(m=>esc(m[0])).join(' · ')}</span></summary>
+     <div class="acc-b mist">${ex.mistakes.map(m=>`<div><b>${esc(m[0])}</b><span><span class="fix">이렇게 고쳐요</span> ${esc(m[1])}</span></div>`).join('')}</div></details>
+   <details class="acc"><summary>${PULSE()}<span class="t">${n(4)} 트레이너 큐</span><span class="sub">${ex.cues.length}가지</span></summary><div class="acc-b">${ex.cues.map(c=>`<div class="cue"><b><span class="q">“</span>${esc(c[0])}<span class="q">”</span></b>${esc(c[1])}</div>`).join('')}</div></details>
+   <div class="note">${PULSE('var(--accent)',16)} 내 레벨 Lv.${L}: <b>${esc(ex.vars[L-1])}</b>${w?` · 권장 ${esc(w)}`:''}</div>
+   <div class="note safety">${PULSE('var(--warn)',18)} <span><b>안전 체크</b> ${esc(ex.safety)}</span></div>`;}
+let HOW_EX=null;
+function openHow(ex){HOW_EX=ex;const sh=$('#howSheet');
+  sh.querySelector('.sh-title').textContent=ex.name;sh.querySelector('.sh-body').innerHTML=howHTML(ex);
+  $('#howBg').hidden=false;sh.hidden=false;sh.scrollTop=0;document.body.classList.add('sheet-open');updateMini();
+  requestAnimationFrame(()=>sh.classList.add('open'));$('#howClose').focus({preventScroll:true});}
+function closeHow(){const sh=$('#howSheet');if(!sh||sh.hidden)return;sh.classList.remove('open');$('#howBg').hidden=true;document.body.classList.remove('sheet-open');setTimeout(()=>{sh.hidden=true;},200);}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeHow();});
 /* ================= FEEDBACK ================= */
 const FB=[
  {v:1,b:'너무 쉬웠어요',s:'5회 이상 더 할 수 있었어요',adj:2,lv:.34},
@@ -2138,16 +2208,17 @@ function renderRefs(){
 }
 
 /* ================= ROUTING ================= */
-const RENDER={today:renderToday,diag:renderDiag,guide:renderGuide,puzzle:renderPuzzle,share:renderShare,refs:renderRefs};
+const RENDER={today:()=>SES?renderSession():renderToday(),diag:renderDiag,guide:renderGuide,puzzle:renderPuzzle,share:renderShare,refs:renderRefs};
 let CUR='today';
 function go(tab,opts={}){
-  if(SES&&tab!=='today'){stopAll();SES=null;keepAwake(false);}
+  closeHow();
   CUR=tab;
   $$('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.tab===tab));
   $$('[role="tabpanel"]').forEach(p=>{p.hidden=p.id!=='p-'+tab;if(p.hidden)p.innerHTML='';});
   RENDER[tab]();
   if(!opts.keepScroll)window.scrollTo({top:0});
   try{history.replaceState(null,'','#'+tab);}catch(e){}
+  updateMini();
 }
 function renderAll(){}
 $$('.tab').forEach(t=>t.onclick=()=>go(t.dataset.tab));
@@ -2155,6 +2226,9 @@ document.addEventListener('click',e=>{
   const g=e.target.closest('[data-go]');if(g){go(g.dataset.go);return;}
   const gd=e.target.closest('[data-guide]');if(gd){G.id=gd.dataset.guide;G.cat='전체';go('guide');}
 });
+$('#miniBack').onclick=()=>go('today');
+$('#howBg').onclick=closeHow;$('#howClose').onclick=closeHow;
+$('#howFull').onclick=()=>{if(HOW_EX){G.id=HOW_EX.id;G.cat='전체';}closeHow();go('guide');};
 function setHdr(){const t=document.querySelector('.top');if(t)document.documentElement.style.setProperty('--hdr',t.offsetHeight+'px');}
 setHdr();addEventListener('resize',setHdr);
 const h=(location.hash||'').slice(1);
