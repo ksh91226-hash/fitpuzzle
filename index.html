@@ -187,6 +187,7 @@ strong.kp{font-weight:700;color:var(--ink);background:linear-gradient(transparen
 .srow.cur{background:var(--surface);color:var(--ink);box-shadow:inset 0 0 0 2px var(--mp)}
 .mini{width:26px;height:26px;border-radius:7px;border:1px solid var(--line);background:var(--surface2);font-size:15px;font-weight:700;line-height:1;color:var(--ink);padding:0}
 @media (max-width:520px){.srow{grid-template-columns:52px 1fr 1fr 18px;padding:10px}.srow .v{font-size:18px}}
+.toolf{margin-bottom:2px}.toolf .opt{padding:5px 10px;font-size:12.5px}
 .areah{font-size:13px;font-weight:700;color:var(--accent);display:flex;align-items:center;gap:6px;margin-top:6px}
 .gtag{font-style:normal;font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:5px;padding:0 5px;margin-right:5px}
 .steps li>span{min-width:0}
@@ -472,6 +473,8 @@ const REFS = {
   maeo21:{t:'Maeo S 외 (2021). Greater hamstrings muscle hypertrophy but similar damage protection after training at long versus short muscle lengths. Med Sci Sports Exerc 53(4):825–837.',u:'https://pubmed.ncbi.nlm.nih.gov/33009197/',use:'시티드 레그 컬이 라잉 레그 컬보다 뒷벅지 성장에 유리'},
   lusk10:{t:'Lusk SJ 외 (2010). Grip width and forearm orientation effects on muscle activity during the lat pull-down. J Strength Cond Res 24(7):1895–1900.',u:'https://journals.lww.com/nsca-jscr/Fulltext/2010/07000/Grip_Width_and_Forearm_Orientation_Effects_on.27.aspx',use:'랫 풀다운 그립 폭·방향과 광배근 활성'},
   schwanbeck20:{t:'Schwanbeck SR 외 (2020). Effects of training with free weights versus machines on muscle mass, strength, free testosterone, and free cortisol levels. J Strength Cond Res 34(7):1851–1859.',u:'https://journals.lww.com/nsca-jscr/fulltext/2020/07000/effects_of_training_with_free_weights_versus.6.aspx',use:'기구 운동도 프리웨이트와 비슷한 근육량·근력 증가'},
+  schwanbeck09:{t:'Schwanbeck S, Chilibeck PD, Binsted G (2009). A comparison of free weight squat to Smith machine squat using electromyography. J Strength Cond Res 23(9):2588–2591.',u:'https://pubmed.ncbi.nlm.nih.gov/19855308/',use:'자유 중량 스쿼트가 스미스 머신 스쿼트보다 하체 근활성 높음 → 단계적 전환'},
+  coratella20:{t:'Coratella G 외 (2020). An electromyographic analysis of lateral raise variations and frontal raise in competitive bodybuilders. Int J Environ Res Public Health 17(17):6015.',u:'https://pubmed.ncbi.nlm.nih.gov/32824894/',use:'레터럴 레이즈 방식별 삼각근 부위 활성'},
   lally10:{t:'Lally P 외 (2010). How are habits formed: Modelling habit formation in the real world. Eur J Soc Psychol 40(6):998–1009.',u:'https://doi.org/10.1002/ejsp.674',use:'습관 자동화까지 평균 66일(18–254일) → 매일 알림·퍼즐 진행도 설계 근거'}
 };
 
@@ -644,7 +647,7 @@ function seatProps(J,opt={}){const h=J.hip,bp=alongT(J,opt.bd||30,opt.bo||10);
 function shinPad(J,front,off){const k=J.kN,a=J.anN,dx=a[0]-k[0],dy=a[1]-k[1],L=Math.hypot(dx,dy)||1,d=[dx/L,dy/L],p=[-d[1],d[0]],sg=front?-1:1;
   return [a[0]-d[0]*(off||4)+p[0]*6*sg,a[1]-d[1]*(off||4)+p[1]*6*sg];}
 const GYM_EX=[
-{id:'legpress',gym:true,area:'lower',name:'레그 프레스',en:'Leg Press Machine',cat:'하체',equip:'레그 프레스 머신',prim:['quads','glutes'],sec:['hams','calves'],seg:{thigh:'p',glute:'p'},kind:'reps',repAdj:0,
+{id:'legpress',gym:true,tool:'머신',area:'lower',name:'레그 프레스',en:'Leg Press Machine',cat:'하체',equip:'레그 프레스 머신',prim:['quads','glutes'],sec:['hams','calves'],seg:{thigh:'p',glute:'p'},kind:'reps',repAdj:0,
  tm:[1100,300,1700,500],ph:['밀어내기','멈춤','천천히 굽히기','준비'],br:['out','hold','in','free'],
  A:{hip:[120,150],t:-30,h:-18,fN:[158,118],fF:[158,118],toeN:160,toeF:160,hN:[128,158],hF:[124,158]},
  B:{hip:[120,150],t:-30,h:-18,fN:[198,126],fF:[198,126],toeN:160,toeF:160,hN:[128,158],hF:[124,158]},
@@ -660,7 +663,7 @@ const GYM_EX=[
  vars:['가벼운 무게 · 부분 가동범위','기본 레그 프레스','템포 3초 내리기','싱글 레그 프레스','무거운 무게 + 정지 1초'],
  ev:'스쿼트처럼 앞벅지·엉덩이를 쓰면서 등받이가 몸통을 받쳐줘 허리와 균형 부담이 적어요. 발 위치와 무릎 각도에 따라 무릎에 걸리는 힘이 달라진다는 연구가 있어 발판 가운데·무릎 약 90° 범위를 권해요.',refs:['escamilla01','schwanbeck20'],
  safety:'무릎 통증이 있으면 가동범위를 줄이고 발을 발판 위쪽에 두세요.'},
-{id:'legcurl',gym:true,area:'lower',name:'시티드 레그 컬',en:'Seated Leg Curl',cat:'하체',equip:'레그 컬 머신',prim:['hams'],sec:['calves'],seg:{thigh:'p',shin:'s'},kind:'reps',repAdj:0,
+{id:'legcurl',gym:true,tool:'머신',area:'lower',name:'시티드 레그 컬',en:'Seated Leg Curl',cat:'하체',equip:'레그 컬 머신',prim:['hams'],sec:['calves'],seg:{thigh:'p',shin:'s'},kind:'reps',repAdj:0,
  tm:[900,500,1600,500],ph:['당기기','조이기','천천히 펴기','준비'],br:['out','hold','in','free'],
  A:{hip:[120,142],t:-15,h:-8,fN:[205,146],fF:[205,146],toeN:170,toeF:170,hN:[132,150],hF:[128,150]},
  B:{hip:[120,142],t:-15,h:-8,fN:[150,186],fF:[150,186],toeN:120,toeF:120,hN:[132,150],hF:[128,150]},
@@ -674,7 +677,7 @@ const GYM_EX=[
  vars:['가벼운 무게 · 부분 가동범위','기본 시티드 레그 컬','조이기 2초','한 다리씩','무거운 무게 + 3초 펴기'],
  ev:'앉아서 하는 레그 컬은 엉덩이가 굽혀져 뒷벅지가 늘어난 상태에서 운동해요. 엎드려 하는 레그 컬보다 뒷벅지 근육이 더 크게 성장했다는 연구가 있어요.',refs:['maeo21'],
  safety:'무릎 뒤가 당기며 아프면 가동범위를 줄이세요.'},
-{id:'legext',gym:true,area:'lower',name:'레그 익스텐션',en:'Leg Extension',cat:'하체',equip:'레그 익스텐션 머신',prim:['quads'],sec:[],seg:{thigh:'p'},kind:'reps',repAdj:0,
+{id:'legext',gym:true,tool:'머신',area:'lower',name:'레그 익스텐션',en:'Leg Extension',cat:'하체',equip:'레그 익스텐션 머신',prim:['quads'],sec:[],seg:{thigh:'p'},kind:'reps',repAdj:0,
  tm:[900,500,1600,500],ph:['펴기','조이기','천천히 내리기','준비'],br:['out','hold','in','free'],
  A:{hip:[120,140],t:-12,h:-6,fN:[166,182],fF:[166,182],toeN:110,toeF:110,hN:[130,148],hF:[126,148]},
  B:{hip:[120,140],t:-12,h:-6,fN:[204,150],fF:[204,150],toeN:170,toeF:170,hN:[130,148],hF:[126,148]},
@@ -688,7 +691,7 @@ const GYM_EX=[
  vars:['가벼운 무게','기본 레그 익스텐션','조이기 2초','한 다리씩','무거운 무게 + 3초 내리기'],
  ev:'앞벅지(대퇴사두근)만 따로 강화하는 운동이에요. 기구가 궤도를 잡아줘 초보자도 자세를 지키기 쉽고, 기구 운동도 프리웨이트와 비슷한 근육 성장 효과를 보였어요.',refs:['schwanbeck20','ratamess'],
  safety:'무릎 앞쪽이 아프면 가동범위를 줄이거나 레그 프레스로 대체하세요.'},
-{id:'abduct',gym:true,area:'lower',name:'힙 어브덕션',en:'Hip Abduction Machine',cat:'하체',equip:'힙 어브덕션 머신',prim:['glutes'],sec:[],seg:{glute:'p',thigh:'s'},kind:'reps',repAdj:2,
+{id:'abduct',gym:true,tool:'머신',area:'lower',name:'힙 어브덕션',en:'Hip Abduction Machine',cat:'하체',equip:'힙 어브덕션 머신',prim:['glutes'],sec:[],seg:{glute:'p',thigh:'s'},kind:'reps',repAdj:2,
  tm:[900,700,1500,500],ph:['벌리기','버티기','천천히 모으기','준비'],br:['out','hold','in','free'],
  A:{hip:[120,140],t:-8,h:-4,fN:[165,182],fF:[165,182],toeN:90,toeF:90,hN:[128,150],hF:[124,150],abd:4},
  B:{hip:[120,140],t:-8,h:-4,fN:[165,182],fF:[165,182],toeN:90,toeF:90,hN:[128,150],hF:[124,150],abd:32},
@@ -702,7 +705,7 @@ const GYM_EX=[
  vars:['가벼운 무게 · 좁은 범위','기본 힙 어브덕션','버티기 2초','상체 살짝 숙여서','무거운 무게 + 부분 반복 추가'],
  ev:'엉덩이 옆 근육(중둔근)은 걷기·한 다리 서기에서 골반을 잡아주는 근육이에요. 다리를 옆으로 벌리는 동작이 중둔근을 강하게 활성화한다는 근전도 연구가 있어요.',refs:['distefano09'],
  safety:'고관절이 찝히듯 아프면 벌리는 범위를 줄이세요.'},
-{id:'pulldown',gym:true,area:'back',name:'랫 풀다운',en:'Lat Pulldown',cat:'상체',equip:'랫 풀다운 머신',prim:['lats'],sec:['arms','delts','traps'],seg:{back:'p',ua:'s',fa:'s'},kind:'reps',repAdj:0,
+{id:'pulldown',gym:true,tool:'머신',area:'back',name:'랫 풀다운',en:'Lat Pulldown',cat:'상체',equip:'랫 풀다운 머신',prim:['lats'],sec:['arms','delts','traps'],seg:{back:'p',ua:'s',fa:'s'},kind:'reps',repAdj:0,
  tm:[900,500,1500,500],ph:['당기기','조이기','천천히 올리기','준비'],br:['out','hold','in','free'],
  A:{hip:[120,142],t:-12,h:-12,fN:[166,196],fF:[166,196],hN:[114,28],hF:[110,28]},
  B:{hip:[120,142],t:-16,h:-10,fN:[166,196],fF:[166,196],hN:[126,84],hF:[122,84]},
@@ -718,7 +721,7 @@ const GYM_EX=[
  vars:['가벼운 무게 · 어깨 내리기 연습','기본 랫 풀다운','조이기 2초','좁은 중립 그립 풀다운','무거운 무게 + 3초 올리기'],
  ev:'넓은 오버그립으로 가슴 쪽으로 당길 때 광배근 활성이 높고, 목 뒤로 당기는 방식보다 어깨 부담이 적다는 연구가 있어요. 턱걸이가 어려운 사람도 무게를 조절해 등을 키울 수 있어요.',refs:['lusk10','schwanbeck20'],
  safety:'어깨가 아프면 좁은 중립 그립으로 바꾸고 가동범위를 줄이세요.'},
-{id:'crow',gym:true,area:'back',name:'시티드 케이블 로우',en:'Seated Cable Row',cat:'상체',equip:'케이블 로우 머신',prim:['lats','traps'],sec:['arms','delts','lowback'],seg:{back:'p',ua:'s'},kind:'reps',repAdj:0,
+{id:'crow',gym:true,tool:'머신',area:'back',name:'시티드 케이블 로우',en:'Seated Cable Row',cat:'상체',equip:'케이블 로우 머신',prim:['lats','traps'],sec:['arms','delts','lowback'],seg:{back:'p',ua:'s'},kind:'reps',repAdj:0,
  tm:[900,500,1500,500],ph:['당기기','조이기','천천히 펴기','준비'],br:['out','hold','in','free'],
  A:{hip:[110,168],t:8,h:10,fN:[170,184],fF:[170,184],toeN:150,toeF:150,hN:[175,116],hF:[173,116]},
  B:{hip:[110,168],t:-3,h:-2,fN:[170,184],fF:[170,184],toeN:150,toeF:150,hN:[132,136],hF:[130,136]},
@@ -733,7 +736,7 @@ const GYM_EX=[
  vars:['가벼운 무게 · 날개뼈 모으기 연습','기본 시티드 로우','조이기 2초','한 팔씩 케이블 로우','무거운 무게 + 3초 펴기'],
  ev:'등 가운데(승모근·능형근)와 광배근을 함께 쓰는 수평 당기기 운동이에요. 가슴 운동과 균형을 맞춰 굽은 자세를 예방하는 데 좋아요.',refs:['ratamess','schwanbeck20'],
  safety:'허리가 불편하면 상체를 움직이지 말고 팔과 등으로만 당기세요.'},
-{id:'chestpress',gym:true,area:'chest',name:'체스트 프레스',en:'Chest Press Machine',cat:'상체',equip:'체스트 프레스 머신',prim:['chest','triceps'],sec:['delts'],seg:{chest:'p',ua:'p',delt:'s'},kind:'reps',repAdj:0,
+{id:'chestpress',gym:true,tool:'머신',area:'chest',name:'체스트 프레스',en:'Chest Press Machine',cat:'상체',equip:'체스트 프레스 머신',prim:['chest','triceps'],sec:['delts'],seg:{chest:'p',ua:'p',delt:'s'},kind:'reps',repAdj:0,
  tm:[900,300,1600,500],ph:['밀기','멈춤','천천히 돌아오기','준비'],br:['out','hold','in','free'],
  A:{hip:[118,142],t:-8,h:-4,fN:[160,196],fF:[160,196],hN:[124,90],hF:[122,90]},
  B:{hip:[118,142],t:-8,h:-4,fN:[160,196],fF:[160,196],hN:[166,92],hF:[164,92]},
@@ -748,7 +751,7 @@ const GYM_EX=[
  vars:['가벼운 무게 · 부분 가동범위','기본 체스트 프레스','템포 3초 돌아오기','한 팔씩 체스트 프레스','무거운 무게 + 정지 1초'],
  ev:'기구가 궤도를 잡아줘 초보자도 안전하게 가슴·삼두·어깨를 강화할 수 있어요. 기구 운동도 프리웨이트와 비슷한 근육량·근력 증가를 보였어요.',refs:['schwanbeck20','calatayud15'],
  safety:'어깨 앞쪽이 아프면 가동범위를 줄이고 팔꿈치를 몸 쪽으로 더 붙이세요.'},
-{id:'treadmill',gym:true,area:'cardio',name:'트레드밀 경사 걷기',en:'Incline Treadmill Walk',cat:'유산소',equip:'트레드밀',prim:['quads','glutes','calves'],sec:['hams'],seg:{thigh:'p',shin:'s',glute:'p'},kind:'steady',brCycle:1600,
+{id:'treadmill',gym:true,tool:'유산소',area:'cardio',name:'트레드밀 경사 걷기',en:'Incline Treadmill Walk',cat:'유산소',equip:'트레드밀',prim:['quads','glutes','calves'],sec:['hams'],seg:{thigh:'p',shin:'s',glute:'p'},kind:'steady',brCycle:1600,
  tm:[450,40,450,40],ph:['걷기','','걷기',''],
  A:{hip:[150,112],t:5,fN:[174,194],fF:[124,190],toeF:30,hN:[136,108],hF:[172,106]},
  B:{hip:[150,112],t:5,fN:[124,190],toeN:30,fF:[174,194],hN:[172,106],hF:[136,108]},
@@ -765,6 +768,155 @@ const GYM_EX=[
  safety:'어지럽거나 가슴이 답답하면 즉시 멈추고, 내릴 땐 벨트를 완전히 멈춘 뒤 내려요.'}
 ];
 EX.push(...GYM_EX);
+/* ================= 바벨 · 스미스 · 덤벨 ================= */
+function barbell(w,opt={}){const z=opt.w||46,r=opt.r||22,out=[PRC([w[0],w[1],-(z+14)],[w[0],w[1],z+14],1.4,'metal')];
+  [z,-z].forEach(zz=>{out.push(PRC([w[0],w[1],zz-2.5],[w[0],w[1],zz+2.5],r,'plate'));out.push(PRC([w[0],w[1],zz+(zz>0?3:-3)],[w[0],w[1],zz+(zz>0?5:-5)],3,'metal'));});return out;}
+function flatBench(x0,x1,y,z){z=z||0;return [PRB([(x0+x1)/2,y+3,z],[x1-x0,6,26],'pad'),PRB([x0+10,(y+6+200)/2,z],[8,200-y-6,20],'frame'),PRB([x1-10,(y+6+200)/2,z],[8,200-y-6,20],'frame')];}
+function smithRails(x,top){return [PRC([x,200,-56],[x,top,-56],2.2,'frame'),PRC([x,200,56],[x,top,56],2.2,'frame'),PRC([x,top,-58],[x,top,58],2.2,'frame')];}
+const FREE_EX=[
+{id:'bbsquat',gym:true,tool:'바벨',area:'lower',name:'바벨 백 스쿼트',en:'Barbell Back Squat',cat:'하체',equip:'바벨 · 스쿼트 랙',prim:['quads','glutes'],sec:['hams','lowback','abs'],seg:{thigh:'p',glute:'p'},kind:'reps',repAdj:-4,
+ tm:[1600,400,1100,700],ph:['내려가기','멈춤','올라오기','숨 채우기'],br:['hold','hold','out','in'],
+ A:{hip:[150,111],t:4,fN:[153,196],fF:[147,196],hN:[143,58],hF:[141,58],eN:-1,eF:-1},
+ B:{hip:[128,160],t:42,fN:[153,196],fF:[147,196],hN:[159,116],hF:[157,116],eN:-1,eF:-1},
+ props:J=>barbell(alongT(J,54,7)),
+ tempo:'내려가기 2초 · 바닥 1초 · 올라오기 1초',breath:'서서 크게 들이쉬고 배에 힘 → 숨 참고 내려가기 → 올라오며 내쉬기',
+ key:['바는 승모근 위에 얹기','무릎은 발끝 방향','배에 힘 주고 숨 채운 뒤 내려가기'],hl:['승모근 위','두 번째 발가락 방향','숨을 크게 들이쉬고'],
+ setup:['랙의 바 높이를 가슴 중간쯤으로 맞추고 안전바를 스쿼트 깊이보다 약간 낮게 설치해요.','바 아래로 들어가 승모근 위(목뼈 아래 살이 도톰한 곳)에 바를 얹고, 어깨너비보다 넓게 잡아요.','바를 들고 두 걸음 뒤로 나와 발을 어깨너비로 벌려요.'],
+ steps:['숨을 크게 들이쉬고 배꼽 주변을 360도로 단단하게 조여요.','엉덩이를 뒤로 빼며 무릎을 두 번째 발가락 방향으로 밀면서 앉아요.','허벅지가 바닥과 평행해질 때까지, 허리가 말리지 않는 범위에서 내려가요.','발바닥 전체로 바닥을 밀어 일어나고, 가장 힘든 구간을 지나면 숨을 내쉬어요.','바가 발 한가운데 위에서 수직으로 움직이게 유지해요.'],
+ cues:[['바를 양손으로 구부린다는 느낌','등 위쪽이 단단해져 바가 안정돼요.'],['가슴은 앞 벽의 로고를 보여주듯','상체가 무너지지 않아요.'],['안전바는 항상 설치','혼자 할 때 실패해도 안전해요.']],
+ mistakes:[['바를 목뼈 위에 얹어요','승모근의 도톰한 부분으로 내리고 어깨를 뒤로 모아 선반을 만들어요.'],['올라올 때 엉덩이만 먼저 올라와요','가슴과 엉덩이가 같이 올라오게, 무게를 줄여 연습해요.'],['안전바 없이 무겁게 해요','안전바를 스쿼트 바닥 높이 바로 아래에 둬요.']],
+ vars:['빈 봉(15~20kg) 박스 스쿼트','빈 봉 백 스쿼트','바벨 백 스쿼트','템포 백 스쿼트(3초 내리기)','무거운 무게 + 정지 스쿼트'],
+ ev:'하체에서 가장 큰 근육을 한 번에 쓰는 대표 복합 운동이에요. 스미스 머신보다 자유 중량 스쿼트에서 하체 근활성이 더 높게 나타났어요.',refs:['schwanbeck09','ratamess'],
+ safety:'반드시 안전바를 설치하고, 허리 통증이 있으면 레그 프레스로 대체하세요.'},
+{id:'deadlift',gym:true,tool:'바벨',area:'lower',name:'바벨 데드리프트',en:'Conventional Deadlift',cat:'하체',equip:'바벨',prim:['glutes','hams','lowback'],sec:['quads','traps','lats'],seg:{glute:'p',thigh:'p',torso:'s'},kind:'reps',repAdj:-5,
+ tm:[1400,600,1700,800],ph:['들어올리기','서서 조이기','내리기','숨 채우기'],br:['hold','out','in','in'],
+ A:{hip:[103,151],t:58,h:48,fN:[148,196],fF:[148,196],hN:[152,178],hF:[150,178]},
+ B:{hip:[150,111],t:0,fN:[148,196],fF:[148,196],hN:[152,111],hF:[150,111]},
+ props:J=>barbell([J.wrN[0]-1,J.wrN[1]+1]),
+ tempo:'들기 1~2초 · 서서 1초 · 내리기 2초',breath:'바닥에서 크게 들이쉬고 버티며 들기 → 다 서서 내쉬기 → 내리며 다시 채우기',
+ key:['바는 발 한가운데 위, 정강이에 붙여서','등은 평평하게, 겨드랑이 조이기','다리로 바닥을 밀며 일어서기'],hl:['발 한가운데 위','정강이에 닿을 때까지','바닥을 밀어내며'],
+ setup:['바가 발 한가운데(신발끈 위) 위에 오게 서요. 발은 골반 너비예요.','엉덩이를 접어 바를 잡고, 정강이가 바에 닿을 때까지 무릎을 굽혀요.','가슴을 펴고 겨드랑이를 조여 등을 평평하게 만들어요.'],
+ steps:['숨을 크게 들이쉬고 배에 힘을 줘 몸통을 고정해요.','다리로 바닥을 밀어내며 바를 들어요. 바는 정강이와 허벅지를 스치듯 올라가요.','바가 무릎을 지나면 엉덩이를 앞으로 밀어 완전히 일어서요.','맨 위에서 엉덩이를 조이고 숨을 내쉬어요. 몸을 뒤로 젖히지 않아요.','엉덩이를 뒤로 빼며 같은 길로 천천히 내려놓아요.'],
+ cues:[['바닥을 발로 밀어낸다','허리로 당기지 않고 다리로 들어요.'],['겨드랑이에 오렌지를 끼운다','등이 둥글어지지 않아요.'],['바는 몸에서 떨어지지 않게','허리 부담이 가장 작아요.']],
+ mistakes:[['등이 둥글게 말려요','무게를 줄이고, 들기 전에 가슴을 펴고 겨드랑이를 조여요.'],['바가 몸에서 멀어져요','정강이에 바를 붙이고 시작해요.'],['위에서 몸을 뒤로 젖혀요','서면 끝이에요. 엉덩이만 조여요.']],
+ vars:['케틀벨·덤벨 데드리프트','빈 봉 루마니안 데드리프트','바벨 데드리프트','템포 데드리프트(3초 내리기)','무거운 무게 + 정지 데드리프트'],
+ ev:'엉덩이·뒷벅지·척추기립근을 함께 쓰는 힙 힌지 복합 운동이에요. 무거운 무게를 다룰 수 있어 전신 근력을 키우는 데 효과적이지만, 자세를 먼저 익히는 게 중요해요.',refs:['ratamess','distefano09'],
+ safety:'허리 통증이 있으면 하지 말고 힙 쓰러스트나 레그 컬로 대체하세요. 처음엔 빈 봉이나 덤벨로 자세를 익히세요.'},
+{id:'hipthrust',gym:true,tool:'바벨',area:'lower',name:'바벨 힙 쓰러스트',en:'Barbell Hip Thrust',cat:'하체',equip:'바벨 · 벤치',prim:['glutes'],sec:['hams','quads'],seg:{glute:'p'},kind:'reps',repAdj:0,
+ tm:[900,1000,1400,500],ph:['밀어 올리기','조이기','내리기','준비'],br:['out','hold','in','free'],
+ A:{hip:[140,178],t:-57,h:-40,fN:[196,196],fF:[196,196],hN:[138,164],hF:[136,164]},
+ B:{hip:[158,150],t:-92,h:-60,fN:[196,196],fF:[196,196],hN:[154,138],hF:[152,138]},
+ props:J=>{const b=alongT(J,4,-13);return [PRB([84,158,0],[22,8,110],'pad'),PRB([84,180,-40],[8,36,8],'frame'),PRB([84,180,40],[8,36,8],'frame'),...barbell(b),PRC([b[0],b[1],-12],[b[0],b[1],12],4.2,'pad')];},
+ tempo:'올리기 1초 · 꼭대기 2초 · 내리기 2초',breath:'밀어 올리며 내쉬기 → 내리며 들이쉬기',
+ key:['날개뼈 아래를 벤치 끝에 걸치기','턱 당기고 갈비뼈 닫기','꼭대기에서 2초 조이기'],hl:['벤치 모서리','뒤꿈치로 바닥을 밀어','2초간 꽉 조여요'],
+ setup:['벤치 옆에 앉아 날개뼈 아래를 벤치 모서리에 걸쳐요.','바벨에 패드를 끼워 골반 앞(골반뼈 바로 아래)에 올려요.','발은 골반 너비로, 올라갔을 때 정강이가 수직이 되는 거리에 둬요.'],
+ steps:['턱을 가볍게 당기고 갈비뼈를 닫아요.','뒤꿈치로 바닥을 밀어 엉덩이를 들어 올려요.','어깨–골반–무릎이 일직선이 되면 2초간 꽉 조여요.','허리를 꺾지 말고 엉덩이로만 버텨요.','천천히 내려와 엉덩이가 바닥에 닿기 직전 다시 올려요.'],
+ cues:[['시선은 무릎 쪽','턱이 들리면 허리가 꺾여요.'],['골반을 말아 올린다','허리가 아닌 엉덩이로 올라가요.'],['정강이는 꼭대기에서 수직','뒷벅지보다 엉덩이에 집중돼요.']],
+ mistakes:[['허리가 꺾이며 올라가요','턱을 당기고 갈비뼈를 닫은 채 일직선에서 멈춰요.'],['바가 골반을 눌러 아파요','두꺼운 패드나 수건을 감아요.'],['발이 너무 멀어요','꼭대기에서 정강이가 수직이 되게 발을 당겨요.']],
+ vars:['맨몸 힙 쓰러스트','빈 봉 힙 쓰러스트','바벨 힙 쓰러스트','싱글 레그 힙 쓰러스트','무거운 무게 + 꼭대기 3초'],
+ ev:'힙 쓰러스트는 백스쿼트보다 대둔근 근활성도가 높게 측정됐어요. 무릎·허리 부담이 적어 엉덩이를 집중적으로 키우기 좋아요.',refs:['contreras15'],
+ safety:'허리가 아프면 높이를 낮추고 꼭대기 정지 시간을 줄이세요.'},
+{id:'smithsquat',gym:true,tool:'스미스',area:'lower',name:'스미스 머신 스쿼트',en:'Smith Machine Squat',cat:'하체',equip:'스미스 머신',prim:['quads','glutes'],sec:['hams','abs'],seg:{thigh:'p',glute:'p'},kind:'reps',repAdj:-2,
+ tm:[1600,400,1100,600],ph:['내려가기','멈춤','올라오기','준비'],br:['in','hold','out','free'],
+ A:{hip:[160,111],t:4,fN:[167,196],fF:[163,196],hN:[157,58],hF:[155,58],eN:-1,eF:-1},
+ B:{hip:[135,160],t:25,fN:[167,196],fF:[163,196],hN:[152,110],hF:[150,110],eN:-1,eF:-1},
+ props:J=>{const b=alongT(J,54,7);return [...smithRails(156,24),...barbell(b,{w:42,r:20})];},
+ tempo:'내려가기 2초 · 바닥 1초 · 올라오기 1초',breath:'내려가며 들이쉬기 → 올라오며 내쉬기',
+ key:['발은 바보다 반 걸음 앞으로','상체는 비교적 세우기','안전 스토퍼 먼저 설정'],hl:['반 걸음 앞으로','허리가 말리지 않는 범위','발바닥 전체로'],
+ setup:['안전 스토퍼를 스쿼트 바닥 높이보다 약간 낮게 맞춰요.','바 아래로 들어가 승모근 위에 얹고, 발은 바보다 반 걸음 앞에 어깨너비로 둬요.','바를 돌려 걸쇠를 풀어요.'],
+ steps:['숨을 들이쉬고 배에 힘을 줘요.','엉덩이를 뒤로 빼며 앉아요. 바는 레일을 따라 수직으로 내려가요.','허벅지가 평행해질 때까지, 허리가 말리지 않는 범위에서 내려가요.','발바닥 전체로 밀어 올라오며 내쉬어요.','마지막 반복 후 바를 돌려 걸쇠에 걸어요.'],
+ cues:[['레일에 기대듯 앉기','궤도가 고정돼 초보자도 자세 잡기 쉬워요.'],['무릎은 발끝 방향','안쪽으로 모이지 않게 해요.'],['걸쇠 위치 먼저 확인','마지막에 당황하지 않아요.']],
+ mistakes:[['발이 바 바로 아래예요','반 걸음 앞으로 두면 무릎·허리 부담이 줄어요.'],['무릎이 안쪽으로 모여요','무게를 줄이고 무릎을 바깥으로 밀어요.'],['걸쇠를 못 걸어요','바를 손목으로 돌리는 방향을 미리 연습해요.']],
+ vars:['빈 봉 스미스 스쿼트(부분 범위)','빈 봉 스미스 스쿼트','스미스 스쿼트','템포 스미스 스쿼트','스미스 스플릿 스쿼트'],
+ ev:'궤도가 고정돼 균형 부담이 적어 초보자나 혼자 운동할 때 안전하게 무게를 올릴 수 있어요. 대신 자유 중량 스쿼트보다 안정 근육 사용은 적다는 연구가 있어, 익숙해지면 바벨 스쿼트로 넘어가는 것도 좋아요.',refs:['schwanbeck09'],
+ safety:'안전 스토퍼를 꼭 설정하고, 무릎이 아프면 가동범위를 줄이세요.'},
+{id:'bench',gym:true,tool:'바벨',area:'chest',name:'바벨 벤치 프레스',en:'Barbell Bench Press',cat:'상체',equip:'바벨 · 벤치 프레스대',prim:['chest','triceps'],sec:['delts'],seg:{chest:'p',ua:'p'},kind:'reps',repAdj:-3,floor:false,
+ tm:[1500,400,900,600],ph:['내리기','가슴 터치','밀어 올리기','준비'],br:['in','hold','out','free'],
+ A:{hip:[150,150],t:-90,h:-90,fN:[190,196],fF:[190,196],hN:[96,94],hF:[94,94]},
+ B:{hip:[150,150],t:-90,h:-90,fN:[190,196],fF:[190,196],hN:[100,138],hF:[98,138]},
+ props:J=>[...flatBench(60,178,154),PRC([80,200,-42],[80,86,-42],1.8,'frame'),PRC([80,200,42],[80,86,42],1.8,'frame'),...barbell(J.wrN)],
+ tempo:'내리기 2초 · 가슴 터치 · 밀기 1초',breath:'내리며 들이쉬기 → 가슴에서 버티기 → 밀며 내쉬기',
+ key:['날개뼈 모으고 가슴 들기','바는 명치 근처로 내리기','팔꿈치는 몸통에서 45~70°'],hl:['날개뼈를 모아','명치 근처','바닥을 밀어'],
+ setup:['벤치에 누워 눈이 바 바로 아래 오게 자리 잡아요.','날개뼈를 뒤로 모아 내리고, 가슴을 살짝 들어요. 엉덩이와 발은 바닥·벤치에 붙여요.','바를 어깨너비보다 조금 넓게 잡고, 팔을 펴서 랙에서 빼요.'],
+ steps:['숨을 들이쉬며 바를 명치 근처로 천천히 내려요.','팔꿈치는 몸통에서 45~70° 벌어지게 해요.','가슴에 살짝 닿으면 발로 바닥을 밀어내며 바를 밀어 올려요.','올리며 숨을 내쉬고, 팔꿈치를 완전히 잠그지 않아요.','마지막 반복 후 팔을 편 채로 랙에 걸어요.'],
+ cues:[['바를 반으로 구부린다는 느낌','어깨가 안정되고 가슴에 힘이 모여요.'],['가슴으로 바를 마중 나간다','날개뼈가 풀리지 않아요.'],['혼자 할 땐 안전바','실패해도 안전해요.']],
+ mistakes:[['엉덩이가 들려요','발로 바닥을 밀되 엉덩이는 벤치에 붙여요.'],['바를 목 쪽으로 내려요','명치~가슴 아래쪽으로 내려요.'],['팔꿈치가 90°로 벌어져요','45~70°로 몸 쪽에 붙여 어깨를 보호해요.']],
+ vars:['덤벨 벤치 프레스(가벼운 무게)','빈 봉 벤치 프레스','바벨 벤치 프레스','템포 벤치 프레스(3초 내리기)','무거운 무게 + 가슴 정지 1초'],
+ ev:'가슴·삼두·어깨를 함께 키우는 대표 상체 운동이에요. 같은 근활성 수준에서 푸시업과 비슷한 근력 향상을 보여, 집에서는 푸시업·헬스장에서는 벤치 프레스로 이어가면 좋아요.',refs:['calatayud15','ratamess'],
+ safety:'무겁게 할 땐 보조자나 안전바를 꼭 쓰고, 어깨가 아프면 덤벨 벤치 프레스로 바꾸세요.'},
+{id:'smithincline',gym:true,tool:'스미스',area:'chest',name:'스미스 인클라인 프레스',en:'Smith Incline Bench Press',cat:'상체',equip:'스미스 머신 · 인클라인 벤치',prim:['chest','delts'],sec:['triceps'],seg:{chest:'p',delt:'p',ua:'s'},kind:'reps',repAdj:-2,
+ tm:[1500,300,900,600],ph:['내리기','멈춤','밀어 올리기','준비'],br:['in','hold','out','free'],
+ A:{hip:[140,152],t:-60,h:-50,fN:[185,196],fF:[185,196],hN:[100,64],hF:[98,64]},
+ B:{hip:[140,152],t:-60,h:-50,fN:[185,196],fF:[185,196],hN:[100,110],hF:[98,110]},
+ props:J=>[PRB([J.hip[0],J.hip[1]+10,0],[30,7,30],'pad'),PRB([J.hip[0],(J.hip[1]+14+200)/2,0],[12,200-J.hip[1]-14,12],'frame'),PRB(alongT(J,32,9).concat(0),[5,62,28],'pad',J.t),
+   ...smithRails(J.wrN[0]+3,30),...barbell(J.wrN,{w:42,r:20})],
+ tempo:'내리기 2초 · 밀기 1초',breath:'내리며 들이쉬기 → 밀며 내쉬기',
+ key:['벤치 각도 30° 안팎','바는 쇄골 아래 윗가슴으로','날개뼈 모으고 밀기'],hl:['30° 안팎','윗가슴','날개뼈를 모아'],
+ setup:['인클라인 벤치를 30° 안팎으로 세워 스미스 바 아래에 둬요.','앉아서 바가 윗가슴(쇄골 아래) 위에 오게 벤치 위치를 맞춰요.','안전 스토퍼를 가슴보다 약간 높게 두고, 바를 돌려 걸쇠를 풀어요.'],
+ steps:['숨을 들이쉬며 바를 윗가슴까지 천천히 내려요.','팔꿈치는 몸통에서 45~60° 벌려요.','가슴에 닿기 직전 밀어 올리며 내쉬어요.','팔을 거의 다 펴면 멈추고 다시 내려요.'],
+ cues:[['가슴 윗부분으로 밀어낸다','윗가슴에 자극이 모여요.'],['어깨가 귀로 올라가지 않게','날개뼈를 내린 상태를 유지해요.'],['궤도는 레일이 잡아준다','무게와 템포에 집중해요.']],
+ mistakes:[['벤치 각도가 너무 서요','45°를 넘으면 어깨 운동이 돼요. 30° 안팎으로 낮춰요.'],['바가 목 쪽으로 떨어져요','벤치 위치를 조절해 윗가슴에 맞춰요.'],['엉덩이가 앞으로 미끄러져요','발로 바닥을 단단히 딛고 엉덩이를 깊이 앉혀요.']],
+ vars:['빈 봉 · 부분 가동범위','빈 봉 스미스 인클라인','스미스 인클라인 프레스','템포 3초 내리기','무거운 무게 + 정지 1초'],
+ ev:'벤치를 세우면 가슴 윗부분과 어깨 앞쪽 사용이 늘어나요. 스미스 머신은 궤도가 고정돼 혼자서도 비교적 안전하게 무게를 다룰 수 있어요.',refs:['schwanbeck09','ratamess'],
+ safety:'어깨가 아프면 벤치 각도를 낮추고 가동범위를 줄이세요.'},
+{id:'dbbench',gym:true,tool:'덤벨',area:'chest',name:'덤벨 벤치 프레스',en:'Dumbbell Bench Press',cat:'상체',equip:'덤벨 · 플랫 벤치',prim:['chest','triceps'],sec:['delts'],seg:{chest:'p',ua:'p'},kind:'reps',repAdj:-2,
+ tm:[1500,300,900,600],ph:['내리기','멈춤','밀어 올리기','준비'],br:['in','hold','out','free'],
+ A:{hip:[150,150],t:-90,h:-90,fN:[190,196],fF:[190,196],hN:[96,94],hF:[94,94],db:1},
+ B:{hip:[150,150],t:-90,h:-90,fN:[190,196],fF:[190,196],hN:[100,140],hF:[98,140],db:1},
+ props:J=>flatBench(60,178,154),
+ tempo:'내리기 2초 · 밀기 1초',breath:'내리며 들이쉬기 → 밀며 내쉬기',
+ key:['날개뼈 모으고 가슴 들기','덤벨은 가슴 옆까지 내리기','위에서 덤벨끼리 부딪히지 않게'],hl:['날개뼈를 모아','가슴 옆','천천히 내려요'],
+ setup:['덤벨을 허벅지 위에 세우고 벤치 끝에 앉아요.','누우면서 무릎으로 덤벨을 밀어 가슴 위로 올려요.','날개뼈를 모으고 팔을 펴 덤벨을 가슴 위에 둬요.'],
+ steps:['숨을 들이쉬며 덤벨을 가슴 옆까지 천천히 내려요.','팔꿈치는 몸통에서 45~70° 벌려요.','가슴이 늘어나는 지점에서 밀어 올리며 내쉬어요.','위에서 덤벨이 서로 가까워지지만 부딪히지 않게 멈춰요.'],
+ cues:[['손목은 팔꿈치 바로 위','힘이 곧게 전달돼요.'],['내릴 때 가슴을 연다','가동범위가 바벨보다 넓어요.'],['끝나면 무릎으로 받기','덤벨을 가슴 위로 안전하게 내려요.']],
+ mistakes:[['덤벨을 옆으로 떨어뜨려요','무릎 위로 가져온 뒤 일어나요.'],['손목이 뒤로 꺾여요','손목을 곧게 세워요.'],['팔꿈치가 90°로 벌어져요','45~70°로 붙여 어깨를 보호해요.']],
+ vars:['가벼운 덤벨 · 부분 범위','덤벨 벤치 프레스','템포 3초 내리기','한 팔씩 덤벨 프레스','무거운 덤벨 + 정지 1초'],
+ ev:'양손이 따로 움직여 좌우 균형을 맞추고 가동범위가 넓어요. 바벨보다 어깨 부담이 적어 입문자와 어깨가 예민한 사람에게 좋아요.',refs:['calatayud15','schwanbeck20'],
+ safety:'어깨가 아프면 가동범위를 줄이고 팔꿈치를 몸 쪽으로 더 붙이세요.'},
+{id:'bbrow',gym:true,tool:'바벨',area:'back',name:'바벨 벤트오버 로우',en:'Barbell Bent-over Row',cat:'상체',equip:'바벨',prim:['lats','traps'],sec:['arms','lowback','hams'],seg:{back:'p',ua:'s'},kind:'reps',repAdj:-2,
+ tm:[800,600,1300,500],ph:['당기기','조이기','내리기','준비'],br:['out','hold','in','free'],
+ A:{hip:[128,118],t:62,fN:[153,196],fF:[147,196],hN:[180,154],hF:[178,154]},
+ B:{hip:[128,118],t:62,fN:[153,196],fF:[147,196],hN:[160,116],hF:[158,116]},
+ props:J=>barbell(J.wrN),
+ tempo:'당기기 1초 · 조이기 1초 · 내리기 2초',breath:'당기며 내쉬기 → 내리며 들이쉬기',
+ key:['상체 45~60° 숙이고 고정','바는 배꼽 쪽으로','날개뼈 먼저 모으기'],hl:['날개뼈를 먼저 모으고','배꼽 쪽으로','천천히 내려요'],
+ setup:['바를 어깨너비로 잡고 서요.','무릎을 살짝 굽히고 엉덩이를 뒤로 빼 상체를 45~60° 숙여요.','등은 평평하게, 바는 무릎 아래로 늘어뜨려요.'],
+ steps:['날개뼈를 먼저 모으고 팔꿈치를 뒤로 끌어당겨요.','바가 배꼽 쪽에 닿을 때까지 당겨요.','등 가운데를 1초 조여요.','상체 각도를 유지한 채 천천히 내려요.'],
+ cues:[['팔꿈치로 뒷주머니를 찌른다','팔 대신 등으로 당겨요.'],['상체는 판자처럼 고정','반동이 줄어요.'],['목은 길게','시선은 발 앞 바닥이에요.']],
+ mistakes:[['상체가 올라가며 당겨요','무게를 줄이고 상체 각도를 고정해요.'],['허리가 둥글게 말려요','상체를 조금 세우거나 체스트 서포티드 로우로 바꿔요.'],['손목으로 말아 당겨요','손목은 곧게, 팔꿈치 방향만 생각해요.']],
+ vars:['덤벨 원암 로우','빈 봉 벤트오버 로우','바벨 벤트오버 로우','템포 로우(조이기 2초)','무거운 무게 + 정지 로우'],
+ ev:'등 전체(광배근·승모근·능형근)를 강하게 쓰는 수평 당기기 복합 운동이에요. 벤치 프레스와 짝을 맞추면 상체 균형이 좋아져요.',refs:['ratamess'],
+ safety:'허리 통증이 있으면 시티드 케이블 로우나 원암 덤벨 로우로 대체하세요.'},
+{id:'dbrow1',gym:true,tool:'덤벨',area:'back',name:'원암 덤벨 로우',en:'One-arm Dumbbell Row',cat:'상체',equip:'덤벨 · 플랫 벤치',prim:['lats'],sec:['traps','arms','delts'],seg:{back:'p',ua:'s'},kind:'reps',repAdj:-2,perSide:true,
+ tm:[800,600,1300,500],ph:['당기기','조이기','내리기','준비'],br:['out','hold','in','free'],
+ A:{hip:[118,120],t:78,h:74,fN:[122,196],fF:[70,150],kF:-1,toeF:-90,hN:[178,164],hF:[176,154],db:1,dbOne:1},
+ B:{hip:[118,120],t:78,h:74,fN:[122,196],fF:[70,150],kF:-1,toeF:-90,hN:[156,116],hF:[176,154],db:1,dbOne:1},
+ props:J=>flatBench(78,200,154,-12),
+ tempo:'당기기 1초 · 조이기 1초 · 내리기 2초',breath:'당기며 내쉬기 → 내리며 들이쉬기',
+ key:['반대쪽 손·무릎으로 벤치 짚기','덤벨을 골반 쪽으로','몸통은 돌리지 않기'],hl:['골반 쪽으로','1초 조여요','천천히 팔을 펴며'],
+ setup:['한쪽 무릎과 같은 쪽 손을 벤치에 올려요.','반대쪽 발은 바닥에 딛고, 등은 바닥과 거의 평행하게 평평하게 만들어요.','덤벨을 어깨 아래로 늘어뜨려요.'],
+ steps:['날개뼈를 뒤로 모으며 당기기를 시작해요.','팔꿈치를 몸통 옆으로 붙여 덤벨을 골반 쪽으로 끌어당겨요.','맨 위에서 1초 조여요.','천천히 팔을 펴며 등이 늘어나는 느낌을 받아요. 한쪽을 다 하고 반대쪽을 해요.'],
+ cues:[['톱질하듯 골반 쪽으로','광배근 아래쪽까지 써요.'],['어깨는 귀에서 멀리','승모근 상부만 쓰지 않아요.'],['몸통을 돌려 들지 않기','무게를 줄이고 등으로만 당겨요.']],
+ mistakes:[['몸통이 돌아가요','무게를 줄이고 벤치를 짚은 팔로 몸을 고정해요.'],['덤벨을 가슴 쪽으로 당겨요','골반 쪽으로 당겨야 광배근을 써요.'],['허리가 처져요','배에 힘을 주고 등을 평평하게 유지해요.']],
+ vars:['가벼운 덤벨 · 부분 범위','원암 덤벨 로우','조이기 2초','무거운 덤벨 로우','크로크 로우(약간의 반동 허용)'],
+ ev:'벤치가 몸통을 받쳐줘 허리 부담이 적고, 한쪽씩 해서 좌우 불균형을 잡기 좋아요. 등 운동 입문에 가장 무난한 자유 중량 운동이에요.',refs:['ratamess','schwanbeck20'],
+ safety:'허리가 불편하면 벤치를 짚은 팔과 무릎으로 체중을 더 받쳐요.'},
+{id:'latraise',gym:true,tool:'덤벨',area:'shoulder',name:'덤벨 사이드 레터럴 레이즈',en:'Dumbbell Lateral Raise',cat:'상체',equip:'덤벨',prim:['delts'],sec:['traps'],seg:{delt:'p',ua:'s'},kind:'reps',repAdj:0,
+ tm:[900,400,1500,500],ph:['옆으로 들기','멈춤','천천히 내리기','준비'],br:['out','hold','in','free'],
+ A:{hip:[150,111],t:3,fN:[153,196],fF:[147,196],hN:[153,110],hF:[151,110],eN:-1,eF:-1,db:1,aab:6},
+ B:{hip:[150,111],t:3,fN:[153,196],fF:[147,196],hN:[153,110],hF:[151,110],eN:-1,eF:-1,db:1,aab:82},
+ tempo:'들기 1초 · 멈춤 · 내리기 2초',breath:'들며 내쉬기 → 내리며 들이쉬기',
+ key:['팔꿈치를 살짝 굽혀 고정','어깨 높이까지만','새끼손가락이 살짝 위로'],hl:['팔꿈치를 살짝 굽힌','어깨 높이까지','천천히 내려요'],
+ setup:['덤벨을 들고 서서 발은 골반 너비로 둬요.','상체를 아주 살짝 앞으로 숙이고, 팔꿈치를 살짝 굽혀 고정해요.','덤벨은 허벅지 옆에 둬요.'],
+ steps:['숨을 내쉬며 팔꿈치부터 옆으로 들어 올려요.','팔이 어깨 높이에 오면 1초 멈춰요.','2초에 걸쳐 천천히 내려요.','덤벨이 허벅지에 닿기 직전 다시 들어요.'],
+ cues:[['덤벨이 아니라 팔꿈치로 든다','어깨 옆(측면 삼각근)에 자극이 모여요.'],['어깨를 으쓱하지 않기','승모근 개입을 줄여요.'],['가벼운 무게로 천천히','반동을 쓰면 효과가 떨어져요.']],
+ mistakes:[['몸을 흔들며 들어요','무게를 줄이고 템포를 지켜요.'],['어깨가 귀로 올라가요','어깨를 내린 채 팔꿈치만 들어요.'],['어깨 위로 높이 들어요','어깨 높이까지만 들어요.']],
+ vars:['물병·아주 가벼운 덤벨','가벼운 덤벨 레터럴 레이즈','덤벨 레터럴 레이즈','템포 3초 내리기','케이블 레터럴 레이즈'],
+ ev:'어깨 옆(측면 삼각근)을 가장 직접적으로 쓰는 운동이에요. 팔 각도와 몸 기울기에 따라 삼각근 부위별 활성이 달라진다는 근전도 연구가 있어요.',refs:['coratella20'],
+ safety:'어깨가 찝히듯 아프면 높이를 낮추고 엄지를 살짝 위로 향하게 하세요.'}
+];
+EX.push(...FREE_EX);
+
 
 const EXM = Object.fromEntries(EX.map(e=>[e.id,e]));
 
@@ -801,7 +953,7 @@ function ik(a,b,l1,l2,s){
   const aa=(l1*l1-l2*l2+d*d)/(2*d),h=Math.sqrt(Math.max(0,l1*l1-aa*aa));
   return {m:[a[0]+ux*aa-uy*h*s,a[1]+uy*aa+ux*h*s],e:[b[0],b[1]]};
 }
-function norm(p){return Object.assign({h:p.t,kN:-1,kF:-1,eN:1,eF:1,toeN:90,toeF:90,abd:0},p);}
+function norm(p){return Object.assign({h:p.t,kN:-1,kF:-1,eN:1,eF:1,toeN:90,toeF:90,abd:0,aab:0},p);}
 function lerpPose(a,b,k){
   const o={};
   for(const key in b){const va=a[key],vb=b[key];
@@ -1014,7 +1166,7 @@ function Stage3D(thumb){
     ['N','F'].forEach(q=>{
       const h=new THREE.Group();ell(h,mat.skin,[2.2,0,0,2.7*as,4*as,3.3*as]);ell(h,mat.skin,[1,1.8,2.2*(q==='N'?1:-1),1.2,2.4,1.2]);fig.add(h);parts['hand'+q]=h;
       const sh=new THREE.Group();ell(sh,mat.light,[-1,-.6,0,3.4,9.2,4.2]);ell(sh,mat.light,[6.5,-1.4,0,2.2,3,4.4]);fig.add(sh);parts['foot'+q]=sh;
-      if(e.A.db){const g=new THREE.Group();const hd=new THREE.Mesh(new THREE.CylinderGeometry(1.3*SC,1.3*SC,15*SC,10),mat.db);hd.rotation.x=Math.PI/2;g.add(hd);
+      if(e.A.db&&!(e.A.dbOne&&q==='F')){const g=new THREE.Group();const hd=new THREE.Mesh(new THREE.CylinderGeometry(1.3*SC,1.3*SC,15*SC,10),mat.db);hd.rotation.x=Math.PI/2;g.add(hd);
         [-6.5,6.5].forEach(z=>{const pl=new THREE.Mesh(new THREE.CylinderGeometry(4.6*SC,4.6*SC,3*SC,18),mat.db);pl.rotation.x=Math.PI/2;pl.position.z=z*SC;pl.castShadow=true;g.add(pl);});fig.add(g);parts['db'+q]=g;}
     });
     parts.props=[];
@@ -1022,7 +1174,7 @@ function Stage3D(thumb){
         metal:std('#B4BCC0',{metalness:.85,roughness:.22}),cable:std('#C9D0D3',{roughness:.5}),deck:std('#23282B',{roughness:.9}),belt:std('#15191B',{roughness:1}),
         screen:std('#12B89C',{emissive:lin('#12B89C'),emissiveIntensity:.8,toneMapped:false})};
       const bg=new THREE.BoxGeometry(1,1,1),cg=new THREE.CylinderGeometry(1,1,1,18);
-      e.props(jointsOf(solve(norm(e.A)),norm(e.A).abd)).forEach(d=>{const m=new THREE.Mesh(d.t==='box'?bg:cg,pm[d.m]||pm.frame);m.castShadow=true;m.receiveShadow=true;fig.add(m);parts.props.push(m);});}
+      e.props(jointsOf(solve(norm(e.A)),norm(e.A).abd,norm(e.A).aab)).forEach(d=>{const m=new THREE.Mesh(d.t==='box'?bg:cg,pm[d.m]||pm.frame);m.castShadow=true;m.receiveShadow=true;fig.add(m);parts.props.push(m);});}
     if(e.floor){const m=new THREE.Mesh(new THREE.BoxGeometry(4.3,.03,1.25),std('#1C2322',{roughness:1}));m.position.set(0,.015,0);m.receiveShadow=true;fig.add(m);}
     // muscles
     const mf=sex==='f'?.86:sex==='n'?.93:1,wf=B.shZ/18;
@@ -1043,10 +1195,11 @@ function Stage3D(thumb){
     dist=Math.max(size.y*1.02,size.x*.84,1.5)/(2*Math.tan(15*Math.PI/180))+.45;
     placeCam();
   }
-  function jointsOf(s,abd){const hz=B.hipZ,sz=B.shZ,az=sz+1.5,J={t:s.t,hip:[s.hip[0],s.hip[1],0],sh:[s.sh[0],s.sh[1],0],
+  function jointsOf(s,abd,aab){const hz=B.hipZ,sz=B.shZ,az=sz+1.5,J={t:s.t,hip:[s.hip[0],s.hip[1],0],sh:[s.sh[0],s.sh[1],0],
       hipN:[s.hip[0],s.hip[1],hz],hipF:[s.hip[0],s.hip[1],-hz],kN:[s.kN[0],s.kN[1],hz],kF:[s.kF[0],s.kF[1],-hz],anN:[s.anN[0],s.anN[1],hz],anF:[s.anF[0],s.anF[1],-hz],
       toeN:[s.toeN[0],s.toeN[1],hz],toeF:[s.toeF[0],s.toeF[1],-hz],shN:[s.sh[0],s.sh[1],sz],shF:[s.sh[0],s.sh[1],-sz],elN:[s.elN[0],s.elN[1],az],elF:[s.elF[0],s.elF[1],-az],wrN:[s.wrN[0],s.wrN[1],az],wrF:[s.wrF[0],s.wrF[1],-az]};
     if(abd){const a=abd*R,c=Math.cos(a),sn=Math.sin(a);[['kN',1],['anN',1],['toeN',1],['kF',-1],['anF',-1],['toeF',-1]].forEach(([k,sg])=>{const dx=J[k][0]-s.hip[0];J[k][0]=s.hip[0]+dx*c;J[k][2]=sg*hz+sg*dx*sn;});}
+    if(aab){const a=aab*R,c=Math.cos(a),sn=Math.sin(a);[['elN',1],['wrN',1],['elF',-1],['wrF',-1]].forEach(([k,sg])=>{const dy=J[k][1]-s.sh[1],dx=J[k][0]-s.sh[0];J[k][1]=s.sh[1]+dy*c;J[k][2]=sg*sz+sg*dy*sn;J[k][0]=s.sh[0]+dx*(.6+.4*c);});}
     return J;}
   function placeCam(){const a=view.az*R,l=view.el*R;camera.position.set(target.x+Math.sin(a)*Math.cos(l)*dist,target.y+Math.sin(l)*dist,target.z+Math.cos(a)*Math.cos(l)*dist);camera.lookAt(target);}
   const tmpM=new THREE.Matrix4(),Y=new THREE.Vector3(),X=new THREE.Vector3(),Z=new THREE.Vector3(),UP=new THREE.Vector3(0,1,0);
@@ -1056,7 +1209,7 @@ function Stage3D(thumb){
   }
   function draw(k,info,time){
     if(!fig)return;
-    const pose=lerpPose(norm(ex.A),norm(ex.B),k),s=solve(pose),J=jointsOf(s,pose.abd||0);
+    const pose=lerpPose(norm(ex.A),norm(ex.B),k),s=solve(pose),J=jointsOf(s,pose.abd||0,pose.aab||0);
     const W=a=>V(a,a[2]);
     const P={hipN:W(J.hipN),hipF:W(J.hipF),kneeN:W(J.kN),kneeF:W(J.kF),ankleN:W(J.anN),ankleF:W(J.anF),
       toeN:W(J.toeN),toeF:W(J.toeF),shN:W(J.shN),shF:W(J.shF),elN:W(J.elN),elF:W(J.elF),wrN:W(J.wrN),wrF:W(J.wrF)};
@@ -1101,10 +1254,11 @@ function Stage3D(thumb){
 let STAGE=null,TSTAGE=null;const THUMBS={};
 try{if(HAS3D){STAGE=Stage3D(false);}}catch(e){HAS3D=false;}
 
+function defView(ex){return ['바벨','스미스'].includes(ex.tool)?{az:26,el:24}:{az:38,el:12};}
 function attachStage(host,ex){
   host.innerHTML='';host.classList.add('fig3d');
   const cv=STAGE.renderer.domElement;cv.className='cv3d';host.appendChild(cv);
-  STAGE.view.az=38;STAGE.view.el=12;STAGE.build(ex,curSex());
+  {const v=defView(ex);STAGE.view.az=v.az;STAGE.view.el=v.el;}STAGE.build(ex,curSex());
   const fit=()=>{const r=host.getBoundingClientRect();if(r.width>0)STAGE.size(Math.round(r.width),Math.round(r.height));};
   fit();if(window.ResizeObserver){const ro=new ResizeObserver(fit);ro.observe(host);}
   let drag=null;
@@ -1140,7 +1294,7 @@ requestAnimationFrame(tick);
 function thumbSVG(host,ex){
   if(HAS3D){try{
     const key=ex.id+curSex()+(document.documentElement.dataset.theme||'')+(matchMedia('(prefers-color-scheme: dark)').matches?'d':'l');
-    if(!THUMBS[key]){if(!TSTAGE){TSTAGE=Stage3D(true);TSTAGE.size(208,160);}TSTAGE.view.az=40;TSTAGE.view.el=10;TSTAGE.build(ex);
+    if(!THUMBS[key]){if(!TSTAGE){TSTAGE=Stage3D(true);TSTAGE.size(208,160);}{const v=defView(ex);TSTAGE.view.az=v.az+2;TSTAGE.view.el=v.el-2;}TSTAGE.build(ex);
       const t=timeline(ex,ex.kind==='interval'?0:ex.tm[0]+10);TSTAGE.draw(t.k,{br:'free',bp:0},0);THUMBS[key]=TSTAGE.renderer.domElement.toDataURL('image/png');}
     host.innerHTML=`<img src="${THUMBS[key]}" alt="" style="width:100%;height:100%;object-fit:cover;display:block">`;return;}catch(e){}}
   createFigure(host,ex,{thumb:true,static:ex.kind==='interval'?0:1});
@@ -1221,11 +1375,14 @@ function plan(){
   const p=S.prof,L=level(),g=p.goal,place=curPlace();
   let ids;
   if(place==='gym'){
-    if(g==='lose')ids=['legpress','pulldown','chestpress','legcurl','crow','treadmill'];
-    else if(g==='health')ids=['legpress','chestpress','crow','legcurl','birddog','treadmill'];
-    else if(g==='shape')ids=p.sex==='m'?['chestpress','pulldown','legpress','crow','press','plank']:['legpress','abduct','legcurl','pulldown','chestpress','plank'];
-    else if(g==='muscle')ids=['legpress','legext','legcurl','pulldown','chestpress','crow'];
-    else ids={belly:['legpress','pulldown','treadmill','plank','curlup'],lower:['legpress','abduct','legcurl','legext','bridge'],upper:['chestpress','pulldown','crow','press','legpress'],back:['pulldown','crow','rdl','birddog','legpress']}[p.part];
+    const fw=L>=3; // 레벨 3부터 바벨·스미스·덤벨 자유 중량 도입
+    if(g==='lose')ids=fw?['smithsquat','dbbench','pulldown','dbrow1','legcurl','treadmill']:['legpress','pulldown','chestpress','legcurl','crow','treadmill'];
+    else if(g==='health')ids=fw?['smithsquat','dbbench','crow','hipthrust','birddog','treadmill']:['legpress','chestpress','crow','legcurl','birddog','treadmill'];
+    else if(g==='shape')ids=p.sex==='m'?(fw?['bench','bbrow','smithsquat','latraise','legcurl','plank']:['chestpress','pulldown','legpress','crow','latraise','plank'])
+                                    :(fw?['hipthrust','smithsquat','abduct','pulldown','dbbench','latraise']:['legpress','abduct','legcurl','pulldown','chestpress','plank']);
+    else if(g==='muscle')ids=fw?['bbsquat','bench','bbrow','deadlift','latraise','legcurl']:['legpress','legext','legcurl','pulldown','chestpress','crow'];
+    else ids={belly:['legpress','pulldown','treadmill','plank','curlup'],lower:fw?['hipthrust','smithsquat','legcurl','abduct','legext']:['legpress','abduct','legcurl','legext','bridge'],
+      upper:fw?['dbbench','pulldown','dbrow1','latraise','smithincline']:['chestpress','pulldown','crow','latraise','legpress'],back:fw?['bbrow','pulldown','dbrow1','hipthrust','birddog']:['pulldown','crow','dbrow1','birddog','legpress']}[p.part];
   }
   else if(g==='lose')ids=['squat','pushup','bridge','row','plank','highknee'];
   else if(g==='health')ids=['squat','pushup','row','bridge','birddog','highknee'];
@@ -1234,12 +1391,14 @@ function plan(){
   else{const x={belly:['plank','curlup','climber'],lower:['bridge','lunge','rdl'],upper:['press','pushup'],back:['row','birddog','rdl']}[p.part];
     ids=[...new Set(['squat','pushup','row',...x])];}
   const notes=[];
+  if(p.back&&place==='gym'){const bm={deadlift:'hipthrust',bbrow:'crow',bbsquat:'legpress'};if(ids.some(i=>bm[i])){ids=ids.map(i=>bm[i]||i);notes.push('허리 불편: 바벨 데드리프트·로우·백스쿼트는 힙 쓰러스트·케이블 로우·레그 프레스로 바꿨어요.');}}
+  if(p.knee&&place==='gym'&&ids.some(i=>i==='bbsquat'||i==='smithsquat')){ids=ids.map(i=>i==='bbsquat'||i==='smithsquat'?'legpress':i);notes.push('무릎 불편: 스쿼트는 가동범위를 조절하기 쉬운 레그 프레스로 바꿨어요.');}
   if(p.knee&&place==='gym'&&ids.includes('legext')){ids=ids.map(i=>i==='legext'?'legcurl':i);notes.push('무릎 불편: 레그 익스텐션 대신 레그 컬로 바꾸고, 레그 프레스는 가동범위를 줄여서 해요.');}
   if(p.knee){ids=ids.map(i=>i==='lunge'?'bridge':i);notes.push('무릎 불편: 런지는 글루트 브릿지로, 스쿼트는 박스 스쿼트로 제한했어요.');}
   if(p.back){ids=ids.map(i=>i==='rdl'?'bridge':i);notes.push('허리 불편: 데드리프트 대신 브릿지·맥길 컬업 중심으로 구성했어요. 통증이 계속되면 전문가 상담을 권해요.');if(!ids.includes('curlup')&&ids.includes('plank'))ids=ids.map(i=>i==='plank'?'curlup':i);}
   ids=[...new Set(ids)];
   // 선호도 반영: 덜 하기 → 같은 계열 대체, 자주 하기 → 우선 포함
-  const allowed=id=>!(p.knee&&(id==='lunge'||id==='legext'))&&!(p.back&&id==='rdl')&&(place==='gym'||!EXM[id].gym);
+  const allowed=id=>!(p.knee&&['lunge','legext','bbsquat','smithsquat'].includes(id))&&!(p.back&&['rdl','deadlift','bbrow','bbsquat'].includes(id))&&(place==='gym'||!EXM[id].gym)&&!(L<3&&['bbsquat','deadlift','bench','bbrow'].includes(id));
   const pf=id=>S.pref[id]||0;
   ids.slice().forEach(id=>{if(pf(id)>=0)return;
     const alt=EX.filter(e=>GROUP[e.id]===GROUP[id]&&!ids.includes(e.id)&&allowed(e.id)&&pf(e.id)>=0).sort((a,b)=>pf(b.id)-pf(a.id))[0];
@@ -1268,9 +1427,11 @@ function plan(){
     const nsets=ex.kind==='steady'?1:Math.max(1,Math.min(10,(ex.kind==='interval'?4+L:(id==='curlup'?Math.max(2,sets-1):sets))+(cu.sets||0)));
     const kg=loadKg(id,L,p.sex,g);
     return {ex,dose,sets:nsets,variant:ex.vars[vi],unit,off:S.off[id]||0,cust:!!(cu.sets||cu.reps),pref:pf(id),kg,sec:ex.kind==='steady'?secT:null,
-      wt:kg&&MACH[id]?`${kg.kg}kg${kg.logged?' · 지난 기록':' 부터'}`:kg&&kg.logged?`한 손 ${kg.kg}kg · 지난 기록`:weightFor(id,L,p.sex,g)};
+      wt:kg&&MACH[id]?`${kg.per?'한 손 ':EXM[id].tool==='바벨'||EXM[id].tool==='스미스'?'총 ':''}${kg.kg}kg${kg.logged?' · 지난 기록':' 부터'}`:kg&&kg.logged?`한 손 ${kg.kg}kg · 지난 기록`:weightFor(id,L,p.sex,g)};
   });
   const cardio=g==='muscle'?'주 2회 20분 걷기(선택)':g==='lose'?'루틴 외 주 150분 이상 빠르게 걷기 권장':'주 150분 중강도 유산소 권장';
+  ids=ids.filter(Boolean);
+  if(items.some(it=>['바벨','스미스'].includes(it.ex.tool)))notes.push('바벨 무게는 봉 무게를 포함한 총무게예요. 올림픽 바는 보통 20kg(여성용 15kg), 스미스 머신 바는 기구마다 달라요. 처음엔 빈 봉으로 자세부터 익혀요.');
   if(place==='gym'&&items.some(it=>MACH[it.ex.id]))notes.push('기구마다 무게 표시가 달라요. 처음엔 추천 무게로 시작해서 12회 했을 때 2회 정도 더 할 수 있는 무게를 찾고, 운동 중 기록해 두면 다음부터 그 무게로 이어가요.');
   const P0={L,items,sets,rest,restSec,notes,cardio,place};
   const est=estimate(P0);P0.est=est;P0.min=est.totalMin;
@@ -1287,9 +1448,10 @@ const MET={
   low:{v:5.0,c:'02022',d:'저충격 버전(제자리 행진·슬로우 클라이머)'},
   warm:{v:2.8,c:'02024',d:'워밍업·정리운동'},
   rest:{v:1.5,c:'—',d:'세트 사이 휴식(서서 숨 고르기, 추정치)'},
+  sqdl:{v:5.0,c:'02052',d:'바벨 스쿼트·데드리프트'},
   walk1:{v:5.3,c:'17034',d:'경사 걷기 1~5%, 보통~빠른 속도'},walk2:{v:7.0,c:'17035',d:'경사 걷기 6~10%, 보통~빠른 속도'},walk3:{v:8.8,c:'17036',d:'경사 걷기 11~20%, 느린~보통 속도'}
 };
-const EXMET={legpress:'dumb',legcurl:'dumb',legext:'dumb',abduct:'dumb',pulldown:'dumb',crow:'dumb',chestpress:'dumb',squat:'body',lunge:'body',pushup:'body',bridge:'body',rdl:'dumb',row:'dumb',press:'dumb',curlup:'core',birddog:'core',plank:'core',highknee:'hiit',climber:'hiit'};
+const EXMET={bbsquat:'sqdl',deadlift:'sqdl',smithsquat:'sqdl',hipthrust:'dumb',bench:'dumb',smithincline:'dumb',dbbench:'dumb',bbrow:'dumb',dbrow1:'dumb',latraise:'dumb',legpress:'dumb',legcurl:'dumb',legext:'dumb',abduct:'dumb',pulldown:'dumb',crow:'dumb',chestpress:'dumb',squat:'body',lunge:'body',pushup:'body',bridge:'body',rdl:'dumb',row:'dumb',press:'dumb',curlup:'core',birddog:'core',plank:'core',highknee:'hiit',climber:'hiit'};
 function estimate(P){
   const kg=Math.max(30,+S.prof.weight||60),kpm=m=>m*3.5*kg/200;
   const restSet=P.restSec;
@@ -1312,7 +1474,7 @@ function estimate(P){
   const total=kcal+wk;
   return {rows,workMin:work/60,restMin:rest/60,warmMin,coolMin,totalMin,kcal:Math.round(total),lo:Math.round(total*.8),hi:Math.round(total*1.2),kg};
 }
-const GROUP={legpress:'lower',legcurl:'lower',legext:'lower',abduct:'lower',pulldown:'pull',crow:'pull',chestpress:'push',treadmill:'cardio',squat:'lower',lunge:'lower',bridge:'lower',rdl:'lower',pushup:'push',press:'push',row:'pull',plank:'core',curlup:'core',birddog:'core',highknee:'cardio',climber:'cardio'};
+const GROUP={bbsquat:'lower',deadlift:'lower',hipthrust:'lower',smithsquat:'lower',bench:'push',smithincline:'push',dbbench:'push',bbrow:'pull',dbrow1:'pull',latraise:'shoulder',legpress:'lower',legcurl:'lower',legext:'lower',abduct:'lower',pulldown:'pull',crow:'pull',chestpress:'push',treadmill:'cardio',squat:'lower',lunge:'lower',bridge:'lower',rdl:'lower',pushup:'push',press:'push',row:'pull',plank:'core',curlup:'core',birddog:'core',highknee:'cardio',climber:'cardio'};
 function prefSeg(id){const v=S.pref[id]||0;
   return `<div class="seg pref" role="group" aria-label="추천 빈도">${[[-1,'덜 하기'],[0,'보통'],[1,'자주 하기']].map(([n,l])=>`<button type="button" data-pref="${id}" data-pv="${n}" aria-pressed="${v===n}">${l}</button>`).join('')}</div>`;}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-pref]');if(!b)return;
@@ -1329,14 +1491,18 @@ const WT={
  row:{from:1,f:[[1,2],[2,3],[3,5],[5,7],[7,10]],m:[[2,4],[4,6],[6,8],[8,12],[12,16]],how:'양손'},
  press:{from:1,f:[[1,2],[1,2],[2,4],[4,5],[5,7]],m:[[2,3],[3,4],[4,6],[6,8],[8,12]],how:'양손'}
 };
+const MACH_FREE={bbsquat:{f:[20,25,30,40,50],m:[30,40,60,80,100],st:2.5},deadlift:{f:[25,30,40,50,65],m:[40,50,70,90,120],st:5},hipthrust:{f:[25,35,45,60,80],m:[30,40,55,75,100],st:5},
+ smithsquat:{f:[15,20,30,40,50],m:[25,35,50,70,90],st:2.5},bench:{f:[15,20,25,30,40],m:[25,35,45,60,80],st:2.5},smithincline:{f:[10,15,20,25,30],m:[20,25,35,45,55],st:2.5},
+ bbrow:{f:[15,20,25,30,40],m:[25,35,45,55,70],st:2.5},dbbench:{f:[3,4,6,8,10],m:[6,8,12,16,20],st:1,per:1},dbrow1:{f:[4,6,8,10,12],m:[8,10,14,18,22],st:1,per:1},latraise:{f:[1,2,2,3,4],m:[2,3,4,6,8],st:1,per:1}};
 const MACH={legpress:{f:[20,30,40,55,70],m:[40,60,80,100,130],st:5},legcurl:{f:[10,15,20,25,30],m:[15,25,30,40,50],st:2.5},legext:{f:[10,15,20,25,32],m:[15,25,35,45,55],st:2.5},
  abduct:{f:[20,25,30,40,50],m:[25,35,45,55,65],st:2.5},pulldown:{f:[15,20,25,32,40],m:[25,35,45,55,65],st:2.5},crow:{f:[15,20,25,30,38],m:[25,35,45,55,65],st:2.5},chestpress:{f:[10,15,20,25,32],m:[20,30,40,50,60],st:2.5}};
 function loadKg(id,L,sex,goal){if(!S.wlog)S.wlog={};
-  if(S.wlog[id])return {kg:S.wlog[id],st:MACH[id]?MACH[id].st:1,logged:true,per:!MACH[id]};
-  if(MACH[id]){const t=MACH[id];let v=sex==='f'?t.f[L-1]:sex==='m'?t.m[L-1]:Math.round((t.f[L-1]+t.m[L-1])/2/2.5)*2.5;if(goal==='muscle')v+=t.st;return {kg:v,st:t.st,logged:false};}
+  if(S.wlog[id])return {kg:S.wlog[id],st:MACH[id]?MACH[id].st:1,logged:true,per:MACH[id]?!!MACH[id].per:true};
+  if(MACH[id]){const t=MACH[id];let v=sex==='f'?t.f[L-1]:sex==='m'?t.m[L-1]:Math.round((t.f[L-1]+t.m[L-1])/2/t.st)*t.st;if(goal==='muscle')v+=t.st;return {kg:v,st:t.st,logged:false,per:!!t.per};}
   const w=WT[id];if(w&&L>=w.from){const i=Math.min(L-w.from,w.f.length-1),r=sex==='f'?w.f[i]:sex==='m'?w.m[i]:[(w.f[i][0]+w.m[i][0])/2,(w.f[i][1]+w.m[i][1])/2];
     let v=Math.round((r[0]+r[1])/2);if(goal==='muscle')v+=1;return {kg:Math.max(1,v),st:1,logged:false,per:true};}
   return null;}
+Object.assign(MACH,MACH_FREE);
 function curPlace(){return S.todayPlace||(S.prof.place==='gym'?'gym':'home');}
 function weightFor(id,L,sex,goal){const w=WT[id];if(!w||L<w.from)return null;
   const i=Math.min(L-w.from,w.f.length-1);let r=sex==='f'?w.f[i]:sex==='m'?w.m[i]:[Math.round((w.f[i][0]+w.m[i][0])/2),Math.round((w.f[i][1]+w.m[i][1])/2)];
@@ -1728,14 +1894,15 @@ function renderGuide(){
   const el=$('#p-guide'),cats=['전체','헬스장 기구','하체','상체','코어','유산소'];
   const inCat=e=>G.cat==='전체'||(G.cat==='헬스장 기구'?e.gym:e.cat===G.cat);
   const list=EX.filter(inCat);
-  const AREA={lower:'하체 기구',back:'등 기구',chest:'가슴 기구',cardio:'유산소 기구'};
-  const btn=e=>`<button class="exbtn" data-ex="${e.id}" aria-current="${e.id===G.id}"><div class="thumb" data-thumb="${e.id}"></div><div><b>${e.name}</b><span>${e.gym?'<em class="gtag">기구</em>':''}${e.cat} · ${e.prim.map(m=>MUS[m]).join(', ')}</span></div></button>`;
-  const listHTML=G.cat==='헬스장 기구'?`<p class="note" style="margin:0">대부분의 헬스장에 있는 대표 기구 ${EX.filter(e=>e.gym).length}종이에요.</p>`+Object.entries(AREA).map(([a,n])=>{const l=list.filter(e=>e.area===a);return l.length?`<div class="areah">${PULSE('var(--accent)',16)} ${n}</div>${l.map(btn).join('')}`:'';}).join(''):list.map(btn).join('');
+  const AREA={lower:'하체',back:'등',chest:'가슴',shoulder:'어깨',cardio:'유산소'};const TOOLS=['전체','머신','바벨','스미스','덤벨'];if(!G.tool)G.tool='전체';
+  const btn=e=>`<button class="exbtn" data-ex="${e.id}" aria-current="${e.id===G.id}"><div class="thumb" data-thumb="${e.id}"></div><div><b>${e.name}</b><span>${e.gym?`<em class="gtag">${e.tool||'기구'}</em>`:''}${e.cat} · ${e.prim.map(m=>MUS[m]).join(', ')}</span></div></button>`;
+  const listHTML=G.cat==='헬스장 기구'?`<div class="filters toolf">${TOOLS.map(t=>`<button class="opt" data-tool="${t}" aria-pressed="${t===G.tool}">${t}</button>`).join('')}</div><p class="note" style="margin:0">대부분의 헬스장에 있는 머신·바벨·스미스·덤벨 운동 ${EX.filter(e=>e.gym).length}종을 부위별로 모았어요.</p>`+Object.entries(AREA).map(([a,n])=>{const l=list.filter(e=>e.area===a&&(G.tool==='전체'||e.tool===G.tool));return l.length?`<div class="areah">${PULSE('var(--accent)',16)} ${n}</div>${l.map(btn).join('')}`:'';}).join(''):list.map(btn).join('');
   el.innerHTML=`<div class="routine-head"><div><div class="eyebrow">검증된 운동 ${EX.length}종 · 집 ${EX.filter(e=>!e.gym).length} · 헬스장 기구 ${EX.filter(e=>e.gym).length}</div><h2 class="h-sec" style="margin-top:4px">운동 가이드</h2></div>
     <div class="filters">${cats.map(c=>`<button class="opt" data-cat="${c}" aria-pressed="${c===G.cat}">${c}</button>`).join('')}</div></div>
   <div class="guide"><div class="exlist">${listHTML}</div>
   <div id="gDetail"></div></div>`;
   $$('[data-thumb]',el).forEach(h=>thumbSVG(h,EXM[h.dataset.thumb]));
+  $$('[data-tool]',el).forEach(b=>b.onclick=()=>{G.tool=b.dataset.tool;const l=EX.filter(e=>e.gym&&(G.tool==='전체'||e.tool===G.tool));if(l.length&&!l.some(e=>e.id===G.id))G.id=l[0].id;renderGuide();});
   $$('[data-cat]',el).forEach(b=>b.onclick=()=>{G.cat=b.dataset.cat;const l=EX.filter(e=>G.cat==='전체'||(G.cat==='헬스장 기구'?e.gym:e.cat===G.cat));if(!l.some(e=>e.id===G.id))G.id=l[0].id;renderGuide();});
   $$('[data-ex]',el).forEach(b=>b.onclick=()=>{G.id=b.dataset.ex;$$('[data-ex]',el).forEach(x=>x.setAttribute('aria-current',x===b));renderDetail();if(innerWidth<900)$('#gDetail').scrollIntoView({behavior:'smooth',block:'start'});});
   renderDetail();
